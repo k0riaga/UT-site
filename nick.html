@@ -1,0 +1,1641 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Генератор никнеймов — Ultimate Toolkit</title>
+
+  <!-- Tailwind CDN (опционально, если вы используете утилиты) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Внешний премиум-стиль вашего проекта -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Локальные корректировки чтобы выглядеть как "Отчёт до даты" -->
+  <style>
+
+    /* Header controls + micro-adjustments to match countdown page */
+    .header-controls { align-items: center; gap: 10px; display:flex; }
+    .header-controls .theme-toggle, .header-controls .icon-btn, .header-controls .btn-primary {
+      transform-origin: center;
+      transition: transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;
+      min-width:46px; height:46px; display:inline-grid; place-items:center; border-radius:12px;
+    }
+    .header-controls .theme-toggle:active, .header-controls .icon-btn:active, .header-controls .btn-primary:active {
+      transform: translateY(1px) scale(.995);
+    }
+
+    /* Keep the same "hero" spacing and large centered card like countdown */
+    .hero { padding-top: 28px; }
+    .hero-left { width:100%; display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .hero-left #hero-title { margin-top: -11px; }
+
+    /* Central card — mirror countdown-card visual */
+    .nick-card {
+      width:90%;
+      max-width: 680px;
+      margin: 16px auto 0 !important;
+      padding: 34px 40px;
+      transform: translateY(-2px);
+      border-radius: 22px !important;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.26);
+      backdrop-filter: blur(22px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.04);
+      text-align:center;
+    }
+
+    #nick-result {
+      display:inline-block;
+      min-width: 360px;
+      text-align:center;
+      font-size:44px;
+      font-weight:900;
+      font-variant-numeric: tabular-nums;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: 18px;
+      padding: 18px 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 20px 60px rgba(2,6,23,0.36);
+      user-select:none;
+      cursor:pointer;
+      transition: transform .36s cubic-bezier(.2,.9,.2,1), opacity .36s;
+    }
+
+    #nick-result:active { transform: translateY(1px) scale(.998); }
+
+    .controls-row {
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      align-items:end;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .control {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width: 160px;
+    }
+
+    label.lab { font-weight:700; color:var(--muted); font-size:13px; display:block; margin-bottom:6px; text-align:left; }
+
+    .cta {
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor:pointer;
+      background: linear-gradient(90deg, rgba(99,102,241,0.95), rgba(139,92,246,0.95));
+      color: white;
+      border: none;
+      box-shadow: 0 22px 60px rgba(99,102,241,0.12);
+    }
+
+    .small-muted { color: var(--muted); }
+
+    /* settings modal and tabs mirror countdown page */
+    .modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:80; }
+    .modal-backdrop { position:absolute; inset:0; background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.45)); }
+    .modal-panel { position:relative; z-index:90; width:100%; max-width:720px; border-radius:12px; padding:18px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); box-shadow: 0 28px 80px rgba(2,6,23,0.55); }
+    .tabs { display:flex; gap:8px; margin-top:12px; }
+    .tab { padding:10px 12px; border-radius:10px; background:transparent; border:1px solid rgba(255,255,255,0.03); cursor:pointer; flex:1; text-align:center; }
+    .tab.active { background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); box-shadow: 0 8px 24px rgba(2,6,23,0.35); }
+
+    .tab-pane.hidden { display:none; }
+
+    /* Responsive */
+    @media (max-width:900px){
+      #nick-result { min-width:240px; font-size:36px; padding:14px 20px; }
+      .nick-card { padding: 20px; transform: translateY(-12px); }
+      .controls-row { flex-direction:column; align-items:stretch; }
+    }
+
+    /* subtle transitions everywhere */
+    * { transition: color .35s ease, background-color .35s ease, border-color .35s ease, box-shadow .35s ease, transform .25s ease; }
+/* ===============================
+   SETTINGS TABS — ACTIVE (UT STYLE)
+   =============================== */
+
+#settingsModal .tab {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #cbd5f5;
+  border-radius: 14px;
+  padding: 10px 14px;
+  transition: all .25s ease;
+}
+
+#settingsModal .tab:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+#settingsModal .tab.active {
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  color: #fff;
+  border-color: transparent;
+  box-shadow:
+    0 8px 30px rgba(99,102,241,.45),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+/* ===============================
+   ULTIMATE TOOLKIT — FOOTER
+   =============================== */
+
+.ut-footer {
+  margin-top: 110px;
+  padding: 28px 0;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+.ut-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+/* BRAND */
+
+.ut-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ut-footer-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c5cff, #06b6d4);
+  box-shadow:
+    0 10px 28px rgba(124,92,255,0.45);
+}
+
+.ut-footer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ut-footer-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ut-footer-copy {
+  font-size: 12.5px;
+  opacity: .6;
+}
+
+/* LINKS */
+
+.ut-footer-links {
+  display: flex;
+  gap: 22px;
+}
+
+.ut-footer-links a {
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: .75;
+  color: var(--text-main);
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
+
+}
+
+.ut-footer-links a:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+.nav-double {
+  gap: 9px;
+}
+
+.nav-row {
+  display: flex;
+  gap: 9px;
+}
+
+
+/* pills остаются такими же */
+.nav-pills a {
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+  </style>
+  <script>
+    fetch('/shared/logo.html')
+      .then(r => r.text())
+      .then(html => {
+        document.head.insertAdjacentHTML('beforeend', html);
+      });
+  </script>
+</head>
+<body>
+
+  <!-- decorative layers (same as countdown) -->
+  <div id="noise" aria-hidden="true"></div>
+  <div class="gradient-animated" aria-hidden="true"></div>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+
+  <!-- HEADER -->
+  <header class="header" role="banner" aria-label="Главная шапка">
+    <div class="header-inner container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">UT</div>
+        <div>
+          <div class="site-title">Ultimate Toolkit</div>
+          <div class="site-sub">Часы · Никнеймы · Пароли · Рандомайзер · Колесо · Даты</div>          
+        </div>
+      </div>
+
+<nav class="nav-pills nav-double" aria-label="Навигация">
+  <div class="nav-row">
+    <a href="index.html">Главная</a>
+    <a href="timer.html">Часы</a>
+    <a href="nick.html" class="active">Никнеймы</a>
+    <a href="password.html">Пароли</a>
+    <a href="random.html">Рандомайзер</a>
+  </div>
+  <div class="nav-row nav-row-sub">
+    <a href="wheel.html">Колесо фортуны</a>
+    <a href="countdown.html">Отчёт до даты</a>
+  </div>
+</nav>
+
+      <div class="header-actions" role="toolbar" aria-label="Действия">
+        <button id="themeBtn" class="icon-btn" aria-pressed="false" title="Сменить тему">🌙</button>
+        <button id="settingsBtn" class="icon-btn" title="Настройки">⚙️</button>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- MAIN: visual layout identical to отчёт до даты, but center content is nick-generator -->
+  <main class="container">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-left fade-up">
+        <h1 id="hero-title" class="text-3xl font-extrabold">Генератор никнеймов</h1>
+        <p class="small-muted mt-3">Укажите первую букву никнейма и количество символов (от 3 до 20 символов).</p>
+
+        <div class="mt-6 card-glass nick-card display-center" aria-hidden="false">
+          <!-- Result -->
+          <div id="nick-result" title="Скопировать">—</div>
+
+          <!-- Controls -->
+          <div class="controls-row" role="region" aria-label="Параметры генерации">
+            <div class="control" style="min-width:220px">
+              <label class="lab" for="nick-first">Первая буква (по желанию)</label>
+              <input id="nick-first" maxlength="1" class="input" placeholder="A" />
+            </div>
+
+            <div class="control" style="min-width:200px">
+              <label class="lab" for="nick-length">Длина (символов)</label>
+              <input id="nick-length" type="number" min="3" max="20" value="5" class="input" />
+            </div>
+
+            <div class="control" style="min-width:180px">
+              <label class="lab" style="opacity:0">Кнопка</label>
+              <button id="nick-gen" class="cta">Сгенерировать</button>
+            </div>
+          </div>
+
+          <div class="mt-6 text-center">
+            <div class="small-muted"> Чтобы скопировать, кликните на никнейм.</div>
+          </div>
+        </div>
+
+  </main>
+<footer class="ut-footer">
+  <div class="ut-footer-inner container">
+
+    <!-- LEFT: BRAND -->
+    <div class="ut-footer-brand">
+      <div class="ut-footer-logo">UT</div>
+      <div class="ut-footer-text">
+        <div class="ut-footer-title">Ultimate Toolkit</div>
+        <div class="ut-footer-copy">
+          © 2026<span id="footerYear"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: LINKS -->
+    <div class="ut-footer-links">
+      <a href="feedback.html">Обратная связь</a>
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+
+  </div>
+</footer>
+
+<!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel settings-panel card-glass" role="document" aria-labelledby="settingsTitle">
+      <button class="modal-close" id="settingsClose" aria-label="Закрыть">✖</button>
+      <h3 id="settingsTitle">Настройки</h3>
+
+      <div class="tabs" style="display:flex;gap:8px;margin-top:12px">
+        <button class="tab" data-tab="personal">Персонализация</button>
+        <button class="tab" data-tab="export">Экспорт</button>
+      </div>
+
+      <div class="tab-content" style="margin-top:12px">
+
+
+        <!-- PERSONAL -->
+        <div class="tab-pane hidden" data-pane="personal">
+          <h4>Персонализация интерфейса</h4>
+          <div class="section">
+            <label>Тема</label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="themeLight" class="btn-toggle">Светлая</button>
+              <button id="themeDark" class="btn-toggle">Тёмная</button>
+            </div>
+
+            <label style="margin-top:12px">Размер UI</label>
+            <select id="fontSizePanel" class="form-select" style="margin-top:8px">
+              <option value="15">15px</option>
+              <option value="16" selected>16px</option>
+              <option value="18">18px</option>
+              <option value="20">20px</option>
+            </select>
+
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button id="particlesPanelToggle" class="btn-toggle">Частицы</button>
+              <button id="reducedMotionToggle" class="btn-toggle">Reduced motion</button>
+            </div>
+
+            <label style="margin-top:12px">UI плотность</label>
+            <select id="uiDensity" class="form-select">
+              <option value="compact">Компакт</option>
+              <option value="normal" selected>Обычная</option>
+              <option value="comfortable">Комфорт</option>
+            </select>
+          </div>
+        </div>
+
+
+        <!-- EXPORT / IMPORT -->
+        <div class="tab-pane hidden" data-pane="export">
+          <h4>Экспорт / Импорт настроек</h4>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="exportBtn" class="btn-primary" style="flex:1">Экспорт в JSON</button>
+            <button id="importBtn" class="btn-ghost" style="flex:1">Импорт (вставить JSON)</button>
+          </div>
+          <textarea id="importArea" placeholder='Вставь JSON и нажми "Импорт"' style="width:100%;height:120px;margin-top:10px;padding:10px;border-radius:8px;background:transparent;border:1px solid var(--border);color:inherit"></textarea>
+          <div class="small-muted" style="margin-top:8px">Экспортирует все настройки, импорт применит и сохранит локально.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <script>
+(function () {
+  'use strict';
+  const doc = document;
+  const root = doc.documentElement;
+
+  // Elements
+  const themeBtn = doc.getElementById('themeBtn');
+  const settingsBtn = doc.getElementById('settingsBtn');
+
+  const settingsModal = doc.getElementById('settingsModal');
+  const settingsClose = doc.getElementById('settingsClose');
+
+  const yearEl = doc.getElementById('year');
+
+  // Controls inside settings
+  const tabButtons = Array.from(doc.querySelectorAll('.tab'));
+  const tabPanes = Array.from(doc.querySelectorAll('.tab-pane'));
+
+  // quick controls
+  const fontSizeSelect = doc.getElementById('fontSize');
+  const particlesBtn = doc.getElementById('toggleParticles');
+  const soundsBtn = doc.getElementById('toggleSounds');
+
+  // panel controls
+  const themeLightBtn = doc.getElementById('themeLight');
+  const themeDarkBtn = doc.getElementById('themeDark');
+  const fontSizePanel = doc.getElementById('fontSizePanel');
+  const particlesPanelToggle = doc.getElementById('particlesPanelToggle');
+  const reducedMotionToggle = doc.getElementById('reducedMotionToggle');
+  const saveAccountBtn = doc.getElementById('saveAccount');
+  const resetAccountBtn = doc.getElementById('resetAccount');
+  const accName = doc.getElementById('accName');
+  const accEmail = doc.getElementById('accEmail');
+
+  const exportBtn = doc.getElementById('exportBtn');
+  const importBtn = doc.getElementById('importBtn');
+  const importArea = doc.getElementById('importArea');
+
+
+
+  // Particles canvas
+  const canvas = doc.getElementById('particle-canvas');
+  const ctx = canvas && canvas.getContext ? canvas.getContext('2d') : null;
+  let particles = [];
+  let particleEnabled = localStorage.getItem('ut_particles') !== 'false';
+  let raf = null;
+
+  // Year
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Helpers: save/load settings
+  function getDefaultSettings(){
+    return {
+      theme: localStorage.getItem('ut_theme') || 'dark',
+      fontSize: localStorage.getItem('ut_font') || '16',
+      particles: localStorage.getItem('ut_particles') !== 'false',
+      sounds: localStorage.getItem('ut_sounds') === 'true',
+      reducedMotion: localStorage.getItem('ut_reduced') === 'true',
+      uiDensity: localStorage.getItem('ut_density') || 'normal',
+      account: JSON.parse(localStorage.getItem('ut_account') || '{}'),
+      security: {
+        twoFA: localStorage.getItem('ut_2fa') === 'true',
+        sessionLock: localStorage.getItem('ut_lock') === 'true'
+      },
+      notify: {
+        push: localStorage.getItem('ut_push') === 'true',
+        mail: localStorage.getItem('ut_mail') === 'true'
+      }
+    };
+  }
+  let settings = getDefaultSettings();
+
+  // Apply theme
+  function applyTheme(theme){
+    if(theme === 'light') root.classList.add('light');
+    else root.classList.remove('light');
+    localStorage.setItem('ut_theme', theme);
+    if(themeBtn) themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    settings.theme = theme;
+  }
+  applyTheme(settings.theme);
+
+  // Apply font size
+  function applyFontSize(px){
+    root.style.setProperty('--font-size-base', px + 'px');
+    localStorage.setItem('ut_font', px);
+    if (fontSizeSelect) fontSizeSelect.value = px;
+    if (fontSizePanel) fontSizePanel.value = px;
+    settings.fontSize = px;
+  }
+  applyFontSize(settings.fontSize);
+
+  // Reduced motion
+  function applyReducedMotion(on){
+    if(on) root.classList.add('reduced-motion'); else root.classList.remove('reduced-motion');
+    localStorage.setItem('ut_reduced', on ? 'true' : 'false');
+    settings.reducedMotion = on;
+  }
+  applyReducedMotion(settings.reducedMotion);
+
+  // UI density
+  function applyDensity(value){
+    document.body.dataset.density = value;
+    localStorage.setItem('ut_density', value);
+    settings.uiDensity = value;
+  }
+  applyDensity(localStorage.getItem('ut_density') || 'normal');
+
+  // Particles implementation
+  function resizeCanvas(){
+    if(!canvas || !ctx) return;
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(innerWidth * dpr);
+    canvas.height = Math.floor(innerHeight * dpr);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function createParticles(count = 88){
+    particles = [];
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        r: 0.6 + Math.random()*4.4,
+        vx: (Math.random()-0.5)*0.6,
+        vy: (Math.random()-0.5)*0.6,
+        hue: 170 + Math.random()*150,
+        a: 0.03 + Math.random()*0.08
+      });
+    }
+  }
+  createParticles(88);
+
+  function drawParticles(){
+    if(!canvas || !ctx) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(!particleEnabled) return;
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -40) p.x = innerWidth + 40; if(p.x > innerWidth + 40) p.x = -40;
+      if(p.y < -40) p.y = innerHeight + 40; if(p.y > innerHeight + 40) p.y = -40;
+      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*8);
+      g.addColorStop(0, `hsla(${p.hue},85%,64%,${p.a})`);
+      g.addColorStop(0.6, `hsla(${p.hue},70%,50%,${p.a*0.4})`);
+      g.addColorStop(1, `hsla(${p.hue},60%,40%,0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r*8,0,Math.PI*2);
+      ctx.fill();
+    }
+    raf = requestAnimationFrame(drawParticles);
+  }
+
+  function startParticles(){
+    particleEnabled = true; localStorage.setItem('ut_particles','true'); settings.particles = true;
+    if(!raf) drawParticles();
+  }
+  function stopParticles(){
+    particleEnabled = false; localStorage.setItem('ut_particles','false'); settings.particles = false;
+    if(raf) { cancelAnimationFrame(raf); raf = null; ctx && ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  if(settings.particles) drawParticles();
+
+  // Toggle handlers
+  themeBtn?.addEventListener('click', ()=> applyTheme(root.classList.contains('light') ? 'dark' : 'light'));
+  themeLightBtn?.addEventListener('click', ()=> applyTheme('light'));
+  themeDarkBtn?.addEventListener('click', ()=> applyTheme('dark'));
+
+  fontSizeSelect?.addEventListener('change', e => applyFontSize(e.target.value));
+  fontSizePanel?.addEventListener('change', e => applyFontSize(e.target.value));
+
+  particlesBtn?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    if(particlesBtn) particlesBtn.classList.toggle('active', particleEnabled);
+  });
+  particlesPanelToggle?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    particlesPanelToggle.classList.toggle('active', particleEnabled);
+  });
+
+  reducedMotionToggle?.addEventListener('click', ()=> {
+    settings.reducedMotion = !settings.reducedMotion;
+    applyReducedMotion(settings.reducedMotion);
+  });
+
+  function applyReducedMotion(on){
+    if(on) root.classList.add('reduced-motion'); else root.classList.remove('reduced-motion');
+    localStorage.setItem('ut_reduced', on ? 'true' : 'false');
+  }
+
+  // Tabs logic (settings)
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', ()=> {
+      tabButtons.forEach(b => b.classList.toggle('active', b === btn));
+      const target = btn.dataset.tab;
+      tabPanes.forEach(p => p.classList.toggle('hidden', p.dataset.pane !== target));
+    });
+  });
+
+  // Modals: open only by buttons (not visible by default)
+  function openModal(modal){
+    if(!modal) return;
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    const f = modal.querySelector('input,button,select,textarea');
+    if(f) setTimeout(()=> f.focus(), 120);
+  }
+  function closeModal(modal){
+    if(!modal) return;
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+
+  // Wire buttons
+  settingsBtn?.addEventListener('click', ()=> openModal(settingsModal));
+  settingsClose?.addEventListener('click', ()=> closeModal(settingsModal));
+  doc.querySelectorAll('[data-close="true"]').forEach(el => el.addEventListener('click', ()=> { closeModal(settingsModal); closeModal(authModal); }));
+
+  // Close on escape
+  window.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
+      closeModal(settingsModal);
+    }
+  });
+
+
+
+  // Export / Import
+  exportBtn?.addEventListener('click', ()=> {
+    const toExport = {
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    };
+    const blob = new Blob([JSON.stringify(toExport, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = doc.createElement('a'); a.href = url; a.download = 'ut_settings.json'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  importBtn?.addEventListener('click', ()=> {
+    try {
+      const data = JSON.parse(importArea.value);
+      if(!data) throw new Error('Пустой JSON');
+      if(data.theme) applyTheme(data.theme);
+      if(data.fontSize) applyFontSize(data.fontSize);
+      if(typeof data.particles !== 'undefined'){ data.particles ? startParticles() : stopParticles(); }
+      if(typeof data.sounds !== 'undefined'){ settings.sounds = !!data.sounds; localStorage.setItem('ut_sounds', settings.sounds ? 'true' : 'false'); }
+      if(typeof data.reducedMotion !== 'undefined'){ applyReducedMotion(!!data.reducedMotion); }
+      if(data.uiDensity) applyDensity(data.uiDensity);
+      if(data.account) { settings.account = data.account; localStorage.setItem('ut_account', JSON.stringify(data.account)); accName.value = data.account.name || ''; accEmail.value = data.account.email || ''; }
+      if(data.security){ settings.security = data.security; localStorage.setItem('ut_2fa', data.security.twoFA ? 'true':'false'); twoFAToggle.checked = !!data.security.twoFA; }
+      if(data.notify){ settings.notify = data.notify; localStorage.setItem('ut_push', data.notify.push ? 'true':'false'); pushToggle.checked = !!data.notify.push; }
+      alert('Настройки импортированы и применены.');
+    } catch(err){
+      alert('Ошибка импорта: ' + err.message);
+    }
+  });
+
+
+
+  // Fill UI from settings on load
+  function hydrateUI(){
+    if(fontSizeSelect) fontSizeSelect.value = settings.fontSize;
+    if(fontSizePanel) fontSizePanel.value = settings.fontSize;
+    if(particlesBtn) particlesBtn.classList.toggle('active', settings.particles);
+    if(soundsBtn) soundsBtn.classList.toggle('active', settings.sounds);
+    if(particlesPanelToggle) particlesPanelToggle.classList.toggle('active', settings.particles);
+    if(twoFAToggle) twoFAToggle.checked = settings.security.twoFA;
+    if(sessionLockToggle) sessionLockToggle.checked = settings.security.sessionLock;
+    if(pushToggle) pushToggle.checked = settings.notify && settings.notify.push;
+    if(mailToggle) mailToggle.checked = settings.notify && settings.notify.mail;
+    if(settings.account){ accName.value = settings.account.name || ''; accEmail.value = settings.account.email || ''; }
+  }
+  hydrateUI();
+
+  // Ensure modals are hidden initially
+  closeModal(settingsModal);
+  closeModal(authModal);
+
+  // micro-interaction: press animation
+  doc.addEventListener('pointerdown', e => {
+    const el = e.target.closest('button, a');
+    if(!el) return;
+    el.animate([{ transform: 'scale(.995)' }, { transform: 'scale(1)' }], { duration: 140, easing: 'cubic-bezier(.2,.9,.2,1)' });
+  });
+
+  // convenience: save settings on unload
+  window.addEventListener('beforeunload', ()=> {
+    localStorage.setItem('ut_settings_snapshot', JSON.stringify({
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    }));
+  });
+
+})();
+  </script>
+
+
+
+<script>
+(function () {
+  /* ===============================
+     UTILS / YEAR
+     =============================== */
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* ===============================
+     ELEMENTS
+     =============================== */
+  const resultEl   = document.getElementById('password-result');
+  const lengthEl   = document.getElementById('pass-length');
+  const genBtn     = document.getElementById('pass-generate');
+
+  const optUpper   = document.getElementById('opt-upper');
+  const optLower   = document.getElementById('opt-lower');
+  const optDigits  = document.getElementById('opt-digits');
+  const optSymbols = document.getElementById('opt-symbols');
+
+  const strengthEl = document.getElementById('strength-label');
+  const themeBtn   = document.getElementById('themeBtn');
+
+  /* ===============================
+     CHARSETS
+     =============================== */
+  const SETS = {
+    upper:   'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    lower:   'abcdefghijklmnopqrstuvwxyz',
+    digits:  '0123456789',
+    symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?/~'
+  };
+  /* ===============================
+     PASSWORD GENERATION
+     =============================== */
+  function secureRandom(max) {
+    const array = new Uint32Array(1);
+    crypto.getRandomValues(array);
+    return array[0] % max;
+  }
+
+  function buildCharset() {
+    let chars = '';
+    if (optUpper.checked)   chars += SETS.upper;
+    if (optLower.checked)   chars += SETS.lower;
+    if (optDigits.checked)  chars += SETS.digits;
+    if (optSymbols.checked) chars += SETS.symbols;
+    return chars;
+  }
+
+  function generatePassword() {
+    const length = Math.max(6, Math.min(64, parseInt(lengthEl.value) || 16));
+    const charset = buildCharset();
+
+    if (!charset) {
+      resultEl.textContent = '—';
+      strengthEl.textContent = 'Недостаточно параметров';
+      strengthEl.className = '';
+      return;
+    }
+
+    let pass = '';
+    for (let i = 0; i < length; i++) {
+      pass += charset[secureRandom(charset.length)];
+    }
+
+    animateResult(pass);
+    updateStrength(pass, charset.length);
+  }
+
+  /* ===============================
+     STRENGTH ANALYSIS
+     =============================== */
+  function updateStrength(password, poolSize) {
+    const entropy = Math.log2(Math.pow(poolSize, password.length));
+
+    let label = 'Средний';
+    let cls   = 's-medium';
+
+    if (entropy < 35) {
+      label = 'Очень лёгкий';
+      cls   = 's-very-weak';
+    } else if (entropy < 55) {
+      label = 'Лёгкий';
+      cls   = 's-weak';
+    } else if (entropy < 75) {
+      label = 'Средний';
+      cls   = 's-medium';
+    } else if (entropy < 95) {
+      label = 'Сложный';
+      cls   = 's-strong';
+    } else {
+      label = 'Очень сложный';
+      cls   = 's-ultra';
+    }
+
+    strengthEl.textContent = label;
+    strengthEl.className = cls;
+  }
+
+  /* ===============================
+     ANIMATION
+     =============================== */
+  function animateResult(text) {
+    const current = resultEl.textContent || '';
+    let frame = '';
+    const max = Math.max(current.length, text.length);
+
+    for (let i = 0; i < max; i++) {
+      if (Math.random() > 0.5 && text[i]) frame += text[i];
+      else if (current[i]) frame += current[i];
+    }
+
+    resultEl.textContent = frame;
+    resultEl.style.opacity = '0.7';
+    resultEl.style.transform = 'translateY(-6px)';
+
+    setTimeout(() => {
+      resultEl.textContent = text;
+      resultEl.style.opacity = '';
+      resultEl.style.transform = '';
+    }, 160);
+  }
+
+  /* ===============================
+     COPY ON CLICK (SILENT)
+     =============================== */
+  resultEl && resultEl.addEventListener('click', async () => {
+    const text = resultEl.textContent.trim();
+    if (!text || text === '—') return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      resultEl.animate(
+        [
+          { transform: 'scale(1)' },
+          { transform: 'scale(.985)' },
+          { transform: 'scale(1)' }
+        ],
+        { duration: 220, easing: 'cubic-bezier(.2,.9,.2,1)' }
+      );
+    } catch {}
+  });
+
+  /* ===============================
+     EVENTS
+     =============================== */
+  genBtn && genBtn.addEventListener('click', generatePassword);
+
+  document.addEventListener('keydown', e => {
+    if (
+      (e.key === 'Enter' || e.key === ' ') &&
+      !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)
+    ) {
+      e.preventDefault();
+      generatePassword();
+    }
+  });
+
+  /* ===============================
+     INITIAL
+     =============================== */
+  resultEl.textContent = '••••••••••';
+})();
+</script>
+
+   <!-- Include global UI script if used (optional) -->
+  <script src="ui.js"></script>
+
+  <!-- Local script: nickname generator + theme + modals + tabs + copy -->
+  <script>
+  (function () {
+    // Год в футере
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Элементы
+    const nickResult = document.getElementById('nick-result');
+    const genBtn = document.getElementById('nick-gen');
+    const firstInput = document.getElementById('nick-first');
+    const lengthInput = document.getElementById('nick-length');
+    const themeBtn = document.getElementById('themeBtn');
+
+    // === 🔽 ПРИМЕР МАССИВА С НИКАМИ (ЗАМЕНИТЕ НА СВОЙ, 2000+ СЛОВ) 🔽 ===
+    const nicknames = [
+  // A
+  "Alo", "Ark", "Azt", "Ane",
+  "Aro", "Asp", "Atu", "Avi",
+  // B
+  "Bly", "Bri", "Bun", "Bex",
+  "Bok", "Bop", "Buk", "Byn",
+  // C
+  "Cay", "Che", "Chu", "Cly",
+  "Cor", "Coy", "Cry", "Cuz",
+  // D
+  "Dak", "Dal", "Dey", "Dik",
+  "Din", "Dox", "Dru", "Dyn",
+  // E
+  "Ela", "Ely", "Emi", "Ena",
+  "Era", "Eri", "Ery", "Eth",
+  // F
+  "Fay", "Fen", "Fik", "Flx",
+  "Fon", "Foy", "Fry", "Fuz",
+  // G
+  "Gai", "Gar", "Gey", "Gik",
+  "Gol", "Gon", "Gry", "Gux",
+  // H
+  "Hak", "Hal", "Hin", "Hok",
+  "Hon", "Hur", "Hux", "Hyk",
+  // I
+  "Ika", "Ilo", "Ima", "Iny",
+  "Ion", "Iro", "Iso", "Ivy",
+  // J
+  "Jek", "Jel", "Jin", "Jok",
+  "Jon", "Jor", "Jot", "Juk",
+  // K
+  "Kaf", "Keg", "Kik", "Kly",
+  "Kob", "Kof", "Kry", "Kux",
+  // L
+  "Lak", "Lan", "Ley", "Lix",
+  "Lok", "Lon", "Lox", "Lun",
+  // M
+  "Mak", "Mal", "Mey", "Mok",
+  "Mon", "Mox", "Muk", "Myk",
+  // N
+  "Nak", "Nal", "Nex", "Nik",
+  "Nok", "Non", "Nux", "Nyk",
+  // O
+  "Oka", "Oli", "Oma", "Oni",
+  "Ora", "Ori", "Ory", "Osu",
+  // P
+  "Pak", "Pal", "Pek", "Pok",
+  "Pol", "Pox", "Pry", "Puk",
+  // Q
+  "Qik", "Qon", "Qox", "Qry",
+  "Qua", "Que", "Qui", "Qux",
+  // R
+  "Rak", "Ral", "Rex", "Rik",
+  "Rok", "Ron", "Rux", "Ryk",
+  // S
+  "Sak", "Sal", "Sek", "Sok",
+  "Sol", "Sox", "Suk", "Syk",
+  // T
+  "Tak", "Tal", "Tek", "Tok",
+  "Ton", "Tox", "Tuk", "Tyn",
+  // U
+  "Uka", "Uli", "Una", "Uni",
+  "Ura", "Uri", "Ury", "Uso",
+  // V
+  "Vak", "Val", "Vek", "Vok",
+  "Vol", "Vox", "Vuk", "Vyk",
+  // W
+  "Wak", "Wal", "Wex", "Wik",
+  "Wok", "Won", "Wux", "Wyk",
+  // X
+  "Xak", "Xal", "Xek", "Xok",
+  "Xol", "Xox", "Xuk", "Xyk",
+  // Y
+  "Yak", "Yal", "Yek", "Yok",
+  "Yol", "Yox", "Yuk", "Yyk",
+  // Z
+  "Zak", "Zal", "Zek", "Zok",
+  "Zol", "Zox", "Zuk", "Zyk",
+  "Aero", "Axon", "Amar", "Aria",
+  "Argo", "Asti", "Atar", "Avor",
+  "Alda", "Amia", "Anya", "Arva",
+  // B
+  "Blix", "Bore", "Brim", "Bush",
+  "Balt", "Bane", "Bexa", "Brio",
+  "Bryn", "Bela", "Bora", "Bina",
+  // C
+  "Crest", "Crux", "Cave", "Core",
+  "Chaz", "Clix", "Corv", "Cyra",
+  "Cara", "Cyna", "Cora", "Cela",
+  // D
+  "Dusk", "Drift", "Delta", "Diver",
+  "Dexa", "Daro", "Dyna", "Dora",
+  "Dirk", "Dune", "Dale", "Dina",
+  // E
+  "Echo", "Ember", "Epoch", "Essa",
+  "Elia", "Enya", "Eris", "Evan",
+  "Eira", "Elva", "Eona", "Eryx",
+  // F
+  "Flare", "Forge", "Fable", "Fang",
+  "Faye", "Fira", "Fyra", "Fela",
+  "Fort", "Flyn", "Frey", "Fiza",
+  // G
+  "Gale", "Gloom", "Glint", "Grave",
+  "Gara", "Gina", "Gora", "Gyra",
+  "Glen", "Grix", "Goro", "Gela",
+  // H
+  "Havoc", "Hearth", "Hive", "Halo",
+  "Hara", "Hyla", "Hina", "Hora",
+  "Helm", "Haze", "Husk", "Hiko",
+  // I
+  "Icarus", "Impulse", "Insight", "Inca",
+  "Idra", "Ilya", "Iona", "Iyra",
+  "Iris", "Ivy", "Iren", "Ilan",
+  // J
+  "Jade", "Jinx", "Jamboree", "Jaguar",
+  "Jara", "Jina", "Jyra", "Jela",
+  "Jace", "Jord", "Jory", "Jena",
+  // K
+  "Karma", "Keel", "Keep", "Kernel",
+  "Kara", "Kyra", "Kora", "Kela",
+  "Kane", "Kiro", "Kyla", "Kira",
+  // L
+  "Lark", "Lake", "Lime", "Lagoon",
+  "Lara", "Lyra", "Lora", "Lena",
+  "Leif", "Lorn", "Lynx", "Lira",
+  // M
+  "Mage", "Mint", "Magic", "Magnet",
+  "Mara", "Myra", "Mora", "Mela",
+  "Mark", "Miko", "Mira", "Mona",
+  // N
+  "Narwhal", "Nash", "Nave", "Nay",
+  "Nara", "Nyra", "Nora", "Nela",
+  "Neil", "Niko", "Nova", "Nyla",
+  // O
+  "Obelisk", "Off", "Oil", "Old",
+  "Oria", "Oyra", "Ora", "Olva",
+  "Orin", "Owen", "Oria", "Otis",
+  // P
+  "Page", "Pain", "Pair", "Pal",
+  "Pira", "Pora", "Pela", "Pyra",
+  "Park", "Pike", "Plex", "Pria",
+  // Q
+  "Quake", "Qualm", "Quart", "Quill",
+  "Qara", "Qyra", "Qora", "Qela",
+  "Quest", "Quin", "Quix", "Quor",
+  // R
+  "Rain", "Raise", "Rally", "Ram",
+  "Rara", "Ryra", "Rora", "Rela",
+  "Rexa", "Riko", "Rona", "Ryla",
+  // S
+  "Salt", "Same", "Sand", "Sap",
+  "Sara", "Syra", "Sora", "Selena",
+  "Skye", "Siri", "Sona", "Sylv",
+  // T
+  "Tail", "Take", "Talon", "Tam",
+  "Tara", "Tyra", "Tora", "Tela",
+  "Thor", "Tiko", "Tyla", "Tara",
+  // U
+  "Unite", "Unity", "Upbeat", "Urban",
+  "Uria", "Urya", "Uora", "Uela",
+  "Ulan", "Uria", "Uriel", "Ursa",
+  // V
+  "Vapor", "Vault", "Veer", "Veg",
+  "Vera", "Vyra", "Vora", "Velia",
+  "Vale", "Viko", "Vyla", "Vira",
+  // W
+  "Wall", "Waltz", "Wand", "Wane",
+  "Wara", "Wyra", "Wora", "Wela",
+  "Wes", "Wren", "Wynn", "Wila",
+  // X
+  "Xyloid", "Xylose", "Xyster", "Xystum",
+  "Xara", "Xyra", "Xora", "Xela",
+  "Xen", "Xero", "Xylo", "Xira",
+  // Y
+  "Yearn", "Yeast", "Yield", "Yoke",
+  "Yara", "Yyra", "Yora", "Yela",
+  "Yuri", "Yona", "Yara", "Yuki",
+  // Z
+  "Zeitgeist", "Zen", "Zenith", "Zephyr",
+  "Zara", "Zyra", "Zora", "Zela",
+  "Zane", "Ziko", "Zyla",
+  "Apex", "Nova", "Vex", "Zyn", "Rook", "Dusk", "Flare", "Hex", "Jolt", "Kryo",
+  "Lynx", "Myth", "Nyra", "Onyx", "Pulse", "Quill", "Rift", "Stryke", "Torch", "Valk",
+  "Wraith", "Xenon", "Ymir", "Zephyr", "Blitz", "Cinder", "Drift", "Echo", "Frost", "Gale",
+  "Halo", "Iris", "Jade", "Karma", "Luxe", "Myst", "Nebula", "Orbit", "Phantom", "Quake",
+  "Raven", "Solar", "Titan", "Ultra", "Void", "Wolf", "Xero", "Yonder", "Zest", "Aeon",
+  "Bolt", "Crimson", "Doom", "Eclipse", "Fang", "Ghoul", "Havoc", "Inferno", "Jinx", "Kraken",
+  "Lancer", "Mantis", "Nitro", "Omega", "Pyro", "Quasar", "Rogue", "Scythe", "Toxin", "Umbra",
+  "Viper", "Warden", "Xenith", "Yara", "Zoltan", "Astra", "Blade", "Cobra", "Dagger", "Fable",
+  "Grave", "Haven", "Iron", "Jester", "Kite", "Lunar", "Marrow", "Noble", "Omen", "Pike",
+  "Quest", "Riddle", "Snake", "Thorn", "Urban", "Verve", "Whisper", "Yield", "Zebra", "Alpha", "Shadow", 
+  "Ace", "Ash", "Ark", "Amp", "Axi", "Aegis", "Alto", "Amar", "Anvil", "Apex",
+  "Argo", "Astra", "Atlas", "Aurum", "Axon", "Azur", "Ameth", "Argon", "Aria", "Arid",
+  "Awe", "Axe", "Azul", "Agave", "Alibi", "Amble", "Anchor", "Angst", "Anon", "Apricot",
+  "Arc", "Arena", "Argyle", "Array", "Ascend", "Ashy", "Aspen", "Acre", "Act", "Adam",
+  "Adept", "Adieu", "Admire", "Adore", "Adrift", "Aerobic", "Aerie", "Affair", "Afire", "After",
+  "Again", "Agape", "Agile", "Aglow", "Agony", "Agree",
+  "Bex", "Blip", "Boo", "Buz", "Bark", "Bolt", "Brim", "Bush", "Byte", "Bane",
+  "Blaze", "Bore", "Brio", "Brute", "Burst", "Blink", "Blitz", "Brave", "Boulder", "Brand",
+  "Balm", "Bard", "Bash", "Bass", "Batch", "Bead", "Beak", "Beam", "Beep", "Belly",
+  "Bench", "Berry", "Bias", "Bide", "Bilk", "Bing", "Bite", "Blare", "Bleak", "Blip",
+  "Babe", "Bacon", "Badge", "Baffle", "Bagel", "Bail", "Bait", "Bake", "Bald", "Bale",
+  "Ball", "Bandy", "Banjo", "Bank", "Banshee", "Bantam", "Barb", "Bare", "Barge",
+  "Cog", "Cid", "Clo", "Crix", "Cave", "Core", "Crest", "Crux", "Cipher", "Claw",
+  "Cloud", "Comet", "Crush", "Cinder", "Chill", "Chrome", "Cipher", "Cobra", "Crown", "Cyclone",
+  "Cairn", "Calm", "Canopy", "Cape", "Carat", "Card", "Care", "Carve", "Case", "Cash",
+  "Cast", "Catch", "Caveat", "Cedar", "Cell", "Cent", "Chaff", "Chalk", "Charm", "Chase",
+  "Cable", "Cache", "Cackle", "Cadet", "Cafe", "Cage", "Cajole", "Cake", "Calamity", "Calcify",
+  "Camel", "Cameo", "Camp", "Canal", "Candy", "Canine", "Canon", "Cant", "Canvas",
+  "Dex", "Dri", "Dusk", "Drift", "Dawn", "Dash", "Dome", "Doom", "Dune", "Depth",
+  "Dragon", "Delta", "Diver", "Drone", "Dust", "Dread", "Dusk", "Dart", "Dwarf", "Dusk",
+  "Dab", "Dale", "Dash", "Daze", "Dear", "Deem", "Denim", "Dent", "Depot", "Derby",
+  "Desert", "Detox", "Deva", "Dial", "Diary", "Dice", "Dick", "Dimple", "Dine", "Dip",
+  "Dabble", "Dado", "Daft", "Dagger", "Daily", "Dainty", "Dairy", "Dally", "Dam", "Damage",
+  "Damn", "Dance", "Dandy", "Dangle", "Dank", "Dapper", "Dare", "Dark", "Dart",
+  "Eon", "Eve", "Echo", "Edge", "Elf", "Ember", "Envy", "Epoch", "Era", "Essence",
+  "Ever", "Exile", "Eon", "Eclipse", "Ether", "Elixir", "Elite", "Enigma", "Evoke", "Eon",
+  "Earl", "Ease", "Ebb", "Eddy", "Elite", "Elope", "Emote", "Endow", "Engage", "Enlist",
+  "Entice", "Envoy", "Epoxy", "Equip", "Ergo", "Essay", "Even", "Ever", "Exalt", "Exile",
+  "Eager", "Eagle", "Earthen", "Easeful", "Easter", "Easy", "Eddy", "Edgy", "Edify", "Edit",
+  "Edge", "Efface", "Effect", "Effort", "Egg", "Egret", "Eight",
+  "Fox", "Fiz", "Fury", "Frost", "Flare", "Forge", "Fable", "Fang", "Feast", "Flint",
+  "Flick", "Flash", "Fog", "Folk", "Force", "Fury", "Flux", "Fable", "Fate", "Fleet",
+  "Fable", "Fabric", "Facade", "Facet", "Facile", "Factor", "Fade", "Fadge", "Faint", "Fair",
+  "Faith", "Fake", "Falcon", "Fall", "False", "Fame", "Famish", "Fan", "Fancy", "Fang",
+  "Fable", "Facet", "Faint", "Fame", "Fang", "Fare", "Fawn", "Feast", "Fell", "Felt",
+  "Ferret", "Fervor", "Fetch", "Fiat", "Fickle", "Fief", "File", "Finch", "Firm", "Flair",
+  "Gex", "Glow", "Gale", "Gem", "Grit", "Gloom", "Glint", "Grave", "Ghost", "Gorge",
+  "Glide", "Gush", "Gale", "Gaze", "Glim", "Grip", "Glow", "Gore", "Gale", "Gild",
+  "Gable", "Gadfly", "Gaffe", "Gage", "Gainly", "Gait", "Galaxy", "Gale", "Gallant", "Gamble",
+  "Game", "Gander", "Gang", "Gap", "Garb", "Garden", "Gargle", "Garish", "Garment", "Garnish",
+  "Gable", "Gad", "Gain", "Gall", "Gape", "Gash", "Gasp", "Gauge", "Gear", "Gel",
+  "Gem", "Genie", "Gent", "Ghost", "Gig", "Gill", "Gilt", "Gird", "Glare", "Glee",
+  "Hix", "Hush", "Haze", "Husk", "Hawk", "Havoc", "Hearth", "Hive", "Halo", "Horde",
+  "Howl", "Hail", "Halt", "Haste", "Hatch", "Haven", "Heal", "Heir", "Helm", "Heron",
+  "Hike", "Hind", "Hint", "Hive", "Hoard", "Hobble", "Habitat", "Hack", "Haggle", "Hailstorm",
+  "Hair", "Half", "Hall", "Halo", "Hamlet", "Handbag", "Handful", "Hang", "Happen", "Happy",
+  "Harbor", "Hard", "Harm", "Harmony", "Harsh", "Haste", "Ink", "Ice", "Iron", "Iris", "Idol", "Inca", "Icarus", "Impulse", "Insight",
+  "Insignia", "Invictus", "Isa", "Icon", "Illum", "Image", "Innate", "Invert", "Ionic", "Ire",
+  "Idle", "Idol", "Igloo", "Illume", "Imbue", "Imp", "Inch", "Index", "Indigo", "Inert",
+  "Infer", "Infuse", "Inkling", "Inlay", "Input", "Iota", "Iron", "Isle", "Issue", "Itch",
+  "Ibis", "Icicle", "Iconic", "Ideal", "Idiom", "Idle", "Idyll", "Igloo", "Ignite", "Ignore",
+  "Ill", "Illicit", "Illume", "Image", "Imbue", "Immerse", "Imminent", "Immortal",
+  "Jab", "Jade",
+  "Jab", "Jade", "Jaguar", "Jail", "Jam", "Jamboree", "Jangle", "Janitor", "Jape", "Jar",
+  "Jargon", "Jasmine", "Jaw", "Jay", "Jazz", "Jeer", "Jelly", "Jeopardy", "Jerkin", "Jest",
+  "Jibe", "Jiffy", "Jilt", "Jinx", "Jive", "Joist", "Jolt", "Jostle", "Jot", "Joust",
+  "Joy", "Judge", "Jungle", "Junk", "Juno", "Juror", "Just", "Juice", "Jolly", "Jerk",
+  "Kale", "Karma", "Keel", "Keep", "Kernel", "Kettle", "Key", "Kickoff", "Kiddo", "Killjoy",
+  "Kiln", "Kimono", "Kingpin", "Kink", "Kissable", "Kit", "Kitchen", "Kite", "Knead", "Knell",
+  "Knack", "Knave", "Knead", "Knell", "Knot", "Know", "Kale", "Karma", "Keen", "Keep",
+  "Kern", "Kick", "Kid", "Kill", "Kin", "Kind", "King", "Kiss", "Kit", "Knack",
+  "Lace", "Lackadaisical", "Lagoon", "Lake", "Lambaste", "Lampoon", "Landing", "Lane", "Lapdog", "Large",
+  "Lark", "Lasting", "Latex", "Lattice", "Laud", "Lavish", "Lawful", "Layman", "Lazy", "Leach",
+  "Leak", "Lean", "Leap", "Leek", "Left", "Leggy", "Lemon", "Lenient", "Lens", "Leotard",
+  "Less", "Let", "Letter", "Level", "Levy", "Liable", "Liaison", "Liberty", "Libra", "Lick",
+  "Mace", "Macho", "Madcap", "Madden", "Mafia", "Maggot", "Magic", "Magnet", "Magnify", "Mahogany",
+  "Mailbox", "Mainstay", "Majesty", "Makeover", "Malady", "Malt", "Mammoth", "Manacle", "Mandate", "Maneuver",
+  "Manga", "Mango", "Mangle", "Mantle", "Maple", "March", "Margin", "Marigold", "Marine", "Marked",
+  "Market", "Maroon", "Marvel", "Masque", "Massive", "Master", "Match", "Material", "Matrix", "Mattress",
+  "Nab", "Nail", "Name", "Nape", "Narwhal", "Nash", "Nave", "Nay", "Neat", "Neck",
+  "Need", "Nest", "Net", "New", "Nice", "Niche", "Nick", "Nimble", "Nine", "Nook",
+  "Noon", "Norm", "North", "Notch", "Note", "Novel", "Now", "Nudge", "Null", "Nun",
+  "Nut", "Nylon", "Nymph", "Oak", "Oar", "Oath", "Obelisk", "Odd", "Off", "Oil",
+  "Old", "Onion", "Only", "Open", "Opt", "Orb", "Order", "Ore", "Origin", "Ornament",
+  "Oscar", "Ought", "Out", "Owl", "Own", "Ox", "Ozone", "Pad", "Page", "Pain",
+  "Pair", "Pal", "Pale", "Palm", "Pan", "Panel", "Pant", "Papa", "Parry", "Part",
+  "Pass", "Past", "Patch", "Path", "Patio", "Pause", "Pave", "Pact", "Pawn", "Peak",
+  "Pearl", "Phoenix", "Pierce", "Pillar", "Pitch", "Plume", "Poise", "Portal", "Prime", "Prism",
+  "Probe", "Prodigy", "Proxy", "Quail", "Quake", "Qualm", "Quart", "Quay", "Queer",
+  "Quest", "Quill", "Quilt", "Quirk", "Quit", "Quiver", "Quota", "Quote", "Quaint", "Quarry",
+  "Queen", "Query", "Quiet", "Quip", "Rabid", "Rack", "Radish", "Raft", "Rain",
+  "Raise", "Rally", "Ram", "Ranch", "Random", "Range", "Rank", "Rap", "Rare", "Rash",
+  "Rat", "Raven", "Ray", "Realm", "Rebel", "Reckon", "Red", "Reef", "Regal", "Rein",
+  "Sack", "Sad", "Safe", "Sail", "Saint", "Salad", "Sale", "Salt", "Same", "Sand",
+  "Sap", "Sari", "Sash", "Sat", "Save", "Saw", "Scab", "Scale", "Scan", "Scar",
+  "Scene", "Scoop", "Score", "Scout", "Scrap", "Screw", "Scrub", "Seal", "Seam", "Seaweed",
+  "Seek", "Seem", "Seize", "Self", "Sense", "Sent", "Serve", "Set", "Seven", "Shade",
+  "Shake", "Shall", "Shame", "Shape", "Share", "Shark", "She", "Sheer", "Shell", "Shelter",
+  "Tab", "Tacit", "Tact", "Tag", "Tail", "Take", "Talon", "Tam", "Tan", "Tang",
+  "Tap", "Tar", "Task", "Taste", "Tax", "Tea", "Teal", "Team", "Tease", "Tech",
+  "Tee", "Tell", "Temp", "Ten", "Tend", "Term", "Test", "Text", "Thank", "That",
+  "The", "Theme", "Then", "There", "They", "Thick", "Thing", "Think", "This", "Thorn",
+  "Thrill", "Throw", "Thumb", "Thump", "Tide", "Tidy", "Till", "Timid", "Tin", "Tip",
+  "Tire", "To", "Toast", "Today", "Toddle", "Token", "Tolerate", "Tone", "Tonic", "Tool",
+  "Top", "Torment", "Torque", "Toss", "Total", "Touch", "Tour", "Tow", "Tower", "Town",
+  "Track", "Trade", "Train", "Trait", "Trash", "Travel", "Tree", "Trend", "Trial", "Tribal",
+  "Trip", "Troop", "Trouble", "Truck", "True", "Trumpet", "Trust", "Truth", "Tub", "Tune",
+  "Turn", "Tusk", "Tutor", "Twang", "Twin", "Twist", "Two", "Type", "Tyrant", "Ubiquitous",
+  "Udder", "Ugly", "Umbrella", "Unite", "Unity", "Upbeat", "Urban", "Urge", "Urn", "Usable",
+  "Use", "User", "Utter", "Vacant", "Vague", "Valiant", "Valid", "Value", "Van", "Vane",
+  "Vapor", "Vault", "Veer", "Veg", "Veil", "Velvet", "Vent", "Verb", "Verse", "Very",
+  "Vest", "Vex", "Via", "Vice", "View", "Vigor", "Vile", "Vine", "Viper", "Virtue",
+  "Vision", "Vital", "Volt", "Vow", "Wage", "Wail", "Wake", "Walk", "Wall", "Waltz",
+  "Wand", "Wane", "Warp", "Wart", "Wash", "Wasp", "Waste", "Watch", "Water", "Wave",
+  "Wax", "Way", "Weak", "Weal", "Wealth", "Wear", "Weave", "Wed", "Weed", "Week",
+  "Weep", "Weld", "Well", "Welp", "Welt", "Wench", "Wend", "Were", "West", "Wet",
+  "Whack", "Whale", "Wham", "What", "Wheat", "Wheel", "Wheeze", "When", "Where", "Whiff",
+  "While", "Whim", "Whine",
+  "Whine", "Wink", "Wipe", "Wire", "Wise", "Wish", "With", "Wit", "Wobble", "Wolf",
+  "Woman", "Wonder", "Wood", "Woo", "Word", "Work", "World", "Worm", "Worn", "Worry",
+  "Worth", "Would", "Wound", "Wove", "Wow", "Wrap", "Wreath", "Wrest", "Wretch", "Wring",
+  "Wrist", "Wrote", "Wrought", "Wrung", "Wry", "Xebec", "Xenia", "Xeric", "Xerox", "Xiphoid",
+  "Xmas", "Xray", "Xtra", "Xtreme", "Xyloid", "Xylose", "Xyster", "Xystum", "Xylitol", "Xylene",
+  "Xanthan", "Xerophyte", "Xylograph", "Xiphias", "Xenon", "Yacht", "Yak", "Yam", "Yankee", "Yap",
+  "Yard", "Yarn", "Yawl", "Yay", "Yearn", "Yeast", "Yield", "Yoke", "Yolk", "Yonder",
+  "Yore", "York", "Young", "Youth", "Yowl", "Yule", "Yummy", "Yurt", "Yank", "Yapok",
+  "Yataghan", "Yeanling", "Yegg", "Yen", "Yes", "Yet", "Yeuk", "Yid", "Yielding", "Yip",
+  "Yodel", "Yogurt", "Yokel", "Yon", "You", "Younker", "Yowl", "Yuck", "Yulelog", "Yum",
+  "Yummo", "Yup", "Yutz", "Yuzluk", "Zag", "Zany", "Zap", "Zarf", "Zati", "Zeal",
+  "Zebu", "Zed", "Zee", "Zeitgeist", "Zen", "Zenith", "Zephyr", "Zest", "Zesty", "Zeta",
+  "Zig", "Zigzag", "Zilch", "Zilla", "Zinc", "Zine", "Zip", "Zipper", "Zircon", "Zodiac",
+  "Zoea", "Zoft", "Zola", "Zone", "Zonked", "Zoo", "Zoon", "Zoop", "Zoot", "Zori",
+  "Zouk", "Zounds", "Zowie", "Zucchini", "Zug", "Zulu", "Zuppa", "Zurich", "Zyde", "Zygote",  "Null", "Rust", "Over", "Proxy", "Firewall", "Forge", "Valkyr", "Gladius", "Mjolnir",
+  "Hoplite", "Legion", "Beowulf", "Minotaur", "Achilles", "Odin", "Raze", "Vex",
+  "Blitz", "Rogue", "Jax", "Zane", "Knox", "Jett", "Cade", "Limbo", "Nether",
+  "Volt", "Cinder", "Gale", "Shard", "Anvil", "Bulwark", "Piston", "Sprocket",
+  "Strategist", "Duke", "Archon", "Overmind", "Warlord", "Phoenix", "Stormbringer",
+  "NightHawk", "Renegade", "SilentBlade", "CrimsonTide", "DarkWraith", "SteelGaze",
+  "Obsidian", "Arion", "Lorian", "Nox", "Roderic", "Vladimir", "Caius", "Zebulon",
+  "Thalos", "Malphas", "Armand", "Leander", "Theoden", "Quintus", "Berengar", "Percival",
+  "Valerian", "Everard", "Dunstan", "Isambard", "Cyrus", "Llewellyn", "Galahad", "Hector",
+  "Achilles", "Hercules", "Apollo", "Thor", "Theseus", "Poseidon", "Hermes", "Atlas", "Ajax",
+  "Bacchus", "Osiris", "Anubis", "Janus", "Prometheus", "Typhon", "Jason", "Paris", "Castor",
+  "Pollux", "Orpheus", "Ganymede", "Eryndor", "Varyon", "Zorander", "Thalor", "Jaxom",
+  "Kaelen", "Drystan", "Lykos", "Eldrin", "Saren", "Vhagar", "Quilon", "Orin", "Xyron",
+  "Zephyrion", "Balion", "Mavros", "Korrin", "Ryker", "Aricel", "Galrin", "Veylin",
+  "Elexar", "Eryon", "Evron", "Elarix", "Etheon", "Exarion", "Eclix", "Endarion", "Eridax",
+  "Exilium", "Evarix", "Elion", "Enarix", "Elixar", "Eonix", "Equinox", "Eldarion", "Eraxon",
+  "Etarion", "Exion", "Falxar", "Fyrion", "Fenixar", "Faelar", "Frixel", "Forion", "Falaris",
+  "Fixen", "Fyron", "Ferix", "Helixar", "Hyron", "Halix", "Horax", "Haelar", "Haxion",
+  "Hylarion", "Hexar", "Hivarion", "Haron", "Halex", "Hion", "Holix", "Herion", "Haxel",
+  "Hirax", "Hysarix", "Holarix", "Helion", "Hynix", "Ixarion", "Ilarix", "Ivonix", "Icarion",
+  "Inex", "Irax", "Ionix", "Ivix", "Maxion", "Morix", "Mavon", "Melarix", "Munix", "Morax",
+  "Malin", "Mavix", "Mirel", "Maxon", "Murion", "Movorix", "Mitharion", "Mistarix",
+  "Muxen", "Mivarix", "Molix", "Madrix", "Maxar", "Magnarix", "Naxion", "Norix", "Navon",
+  "Nelarix", "Nunix", "Norax", "Nalin", "Navix", "Nirel", "Naxon", "Nurion", "Novorix",
+  "Nitharion", "Nistarix", "Nuxen", "Nivarix", "Nolix", "Nadrix", "Naxar", "Nagnarix",
+  "Oaxion", "Orix", "Ovon", "Onix", "Orax", "Olarin", "Ovix", "Oirel", "Oxon", "Ovorix",
+  "Ostarix", "Ouxen", "Olix", "Oadrix", "Oaxar", "Paxion", "Porix", "Pavon", "Pelarix",
+  "Punix", "Porax", "Palin", "Pavix", "Vaxion", "Vorix", "Vavon", "Velarix", "Vunix", "Vorax",
+  "Valin", "Vavix", "Virel", "Vaxon", "Vurion", "Vovorix", "Vitharion", "Vistarix", "Vuxen",
+  "Vivarix", "Volix", "Vadrix", "Vaxar", "Vagnarix", "Waxon", "Wirix", "Wavon", "Welarix",
+  "Noctis", "Vesper", "Shade", "Corvus", "Eldric", "Nyx", "Rune", "Kalon", "Zarek", "Vorian",
+  "Ravenor", "Nikolai", "Sable", "Aldous", "Ebon", "Quillon", "Morwen", "Xanthos", "Valko",
+  "Lucien", "Alastor", "Tenebris", "Varian", "Bastian", "Obsidian", "Arion", "Lorian", "Nox",
+  "Roderic", "Vladimir", "Caius", "Zebulon", "Thalos", "Malphas", "Armand", "Leander",
+  "Theoden", "Quintus", "Berengar", "Percival", "Valerian", "Everard", "Dunstan", "Isambard",
+  "Cyrus", "Llewellyn", "Galahad", "Hector", "Achilles", "Hercules", "Apollo", "Thor",
+  "Theseus", "Poseidon", "Hermes", "Atlas", "Ajax", "Bacchus", "Osiris", "Anubis", "Janus",
+  "Prometheus", "Typhon", "Jason", "Paris", "Castor", "Pollux", "Orpheus", "Ganymede",
+  "Eryndor", "Varyon", "Zorander", "Thalor", "Jaxom", "Kaelen", "Drystan", "Lykos",
+  "Eldrin", "Saren", "Vhagar", "Quilon", "Orin", "Xyron", "Zephyrion", "Balion", "Mavros",
+  "Starweaver", "Quasar", "Galaxy", "Solarwind", "Voidstorm", "Nebulae", "Pulse", "Lightchaser",
+  "Comet", "Ether", "Stardrift", "Photon", "Vortex", "Starfield", "Moonbeam", "Cosmos",
+  "Spaceward", "Starburst", "Darkmatter", "Nebulai", "Starforge", "Eclipse", "Voidwalker",
+  "Quantum", "Lightwave", "Galaxy", "Startrail", "Cometfall", "Solarflare", "Starfade",
+  "Celestia", "Nebulon", "Quasix", "Solarwind", "Voidwalker", "Lightweaver", "Galaxial",
+  "Cometdust", "Starblaze", "Quantumshift", "Lunarshadow", "Starfield", "Pulsarveil",
+  "Voidstorm", "Eclipse", "Nebulae", "Etherflow", "Starforge", "Darkmatter", "Starwave",
+  "Nebulon", "Quasar", "Lightstream", "Solarflare", "Voidhunter", "Starfield", "Galaxywind",
+  "Starforge", "Nebuladream", "Quasiflow", "Lightdust", "Solarwave", "Voidwalker", "Starsmith",
+  "Galaxywhirl", "Cometfire", "Hyperglow", "Stellarfrost", "Quantumnight", "Moonbloom",
+  "Pulsebeam", "Solardance", "Darknebula", "Starshiver", "Voidbreath", "Stellarvoid",
+  "Lightforge", "Starpulse", "Nebulawind", "Quasistorm", "Lightwave", "Solarshade", "Voiddrifter",
+  "Starweave", "Galaxybloom", "Comettrail", "Hypernova", "Stellarsurge", "Quantumscape",
+  "Moonglow", "Pulsefire", "Solarburst", "Darkfrost", "Starwhisper", "Voidshadow", "Starvoid",
+  "Lightdrift", "Stardrift", "Nebulafire", "Quasiblaze", "Solarstorm", "Voidwhirl", "Starsurge",
+  "Galaxyswirl", "Cometburst", "Hyperflare", "Quantumleap", "Pulsewave", "Solarecho",
+  "Starfrost", "Voidglow", "Starquiver", "Starblaze", "Nebulamist", "Quasiflux", "Lightvoid",
+  "Solarflare", "Voidgale", "Starslice", "Galaxyfrost", "Starflare", "Nebuladream", "Quasifield",
+  "Solaris", "Dawn", "Celeste", "Vesper", "Altair", "Bellatrix", "Ceres", "Deimos",
+  "Europa", "Hydra", "Lyra", "Navi", "Oberon", "Polaris", "Quantum", "Regulus",
+  "Scorpius", "Titan", "Callisto", "Regor", "Saros", "Thuban", "Umbriel", "Vega",
+  "Webb", "Xena", "Ymir", "Zenith", "Alcor", "Belinda", "Caelum", "Deneb", "Encelad gef",
+  "Fornax", "Gemini", "Helios", "Iris", "Janus", "Kepler", "Lynx", "Mira", "Norma",
+  "Orion", "Perseus", "Rhea", "Sirius", "Tethys", "Umbra", "Virgo", "Wezen", "Algol",
+  "Stella", "Andromeda", "Leo", "Castor", "Aurora", "Perseus", "Vega", "Atlas", "Lyra",
+  "Altair", "Sirius", "Taurus", "Archer", "Mars", "Mercury", "Jupiter", "Saturn", "Neptune",
+  "Aries", "Pluto", "Star", "Astrid", "Sky", "Starling", "Galaxy", "Nebula", "Meteor", "Nova",
+  "Eclipse", "Solaris", "Dawn", "Aurora", "Celeste", "Phoenix", "Vesper", "Altair",
+  "Bellatrix", "Ceres", "Deimos", "Europa", "Hydra", "Lyra", "Navi", "Oberon", "Polaris",
+  "Quantum", "Regulus", "Scorpius", "Titan", "Callisto", "Regor", "Saros", "Thuban",
+  "Umbriel", "Vega", "Webb", "Xena", "Ymir", "Zenith",
+  "Zyra", "Nivara", "Elara", "Vespera", "Kaelith", "Lyrixa", "Seraphina", "Xanthis",
+  "Mirella", "Thalassa", "Orlena", "Ithara", "Zephyra", "Calista", "Nyxara", "Taryn",
+  "Elowen", "Vandara", "Lunara", "Cyllene", "Astraea", "Elyndra", "Quorra", "Selenis",
+  "Aeliana", "Veloria", "Nerissa", "Kyra", "Xalina", "Thessia",
+  "Zephyrion", "Thraxon", "Kaldor", "Varkos", "Draven", "Zorin", "Xylar", "Talon", "Rhenar",
+  "Maelstrom", "Arcturus", "Kryton", "Vorath", "Zarek", "Orionis", "Galen", "Seraphis",
+  "Varian", "Xandor", "Eldric", "Kael", "Theron", "Valen", "Nyros", "Voss", "Draegon",
+  "Corvax", "Elion", "Zorath", "Thalion",
+  "Sporktron", "Zigglywump", "Bloopnar", "Quirkle", "ZappyZap", "Glibber", "Wobblewoo",
+  "Snorfle", "BlibberBlob", "Fuzzlewump", "ZiggyZap", "Gloopster", "WibbleWobble",
+  "Quibblequark", "Wompus", "Snazzlepuff", "Binkybop", "Wugsy", "Noodlenoggin", "ZappleZap",
+  "Fluffernub", "Glorp", "Boinkle", "Doodlebug", "Womblewump", "Snizzle", "Jibberjabber",
+  "Glimble", "Zogwog", "QuibbleQuib",
+  "Azaroth", "Ithilmar", "Zephyros", "Xantar", "Velkarn", "Taryon", "Nyxos", "Aelor",
+  "Qorath", "Seraphel", "Zalthar", "Morvion", "Galathor", "Eldaron", "Xyphor", "Thaloron",
+  "Kalmaros", "Virethon", "Astarion", "Myrddin", "Zephron", "Arthanis", "Valithor",
+  "Nymarion", "Drakonis", "Verathos", "Lytheron", "Elros", "Zyrion", "Kaldorax",
+  "Qyron", "Nivix", "Zaloth", "Xypher", "Varkon", "Eldrax", "Klyros", "Zolmar", "Fyran",
+  "Vynix", "Quorath", "Zynthar", "Rylaris", "Veldran", "Tylos", "Zypherion", "Eltrax",
+  "Qalith", "Xorath", "Mylor", "Zolthar", "Wrython", "Dralix", "Vyxen", "Qalthros",
+  "Xyronis", "Kaldros", "Vynros", "Lythor",
+  "Shadowstar", "Nyxon", "Vortex", "Zander", "Blayde", "Kryos", "Noxar", "Valtor",
+  "Ravenix", "Zephyr", "Draco", "Talonix", "Zorak", "Venomir", "Xyros", "Galvyn", "Skorne",
+  "Vorlon", "Zylos", "Thunderon", "Valtrex", "Nyxen", "Riptide", "Solstice", "Quasar",
+  "Zephyrus", "Xylo", "Blayzor", "Zoltan", "Krylon",
+  "Pippin", "Lumo", "Zuzu", "Binky", "Flixie", "Nibblet", "Zelly", "Trixie", "Fuzzball",
+  "Pooka", "Wiggly", "Lolly", "Zippy", "Cuddlebug", "Sprout", "Niblet", "Wubsy", "Pixie",
+  "Glimmer", "Snugglepuff", "Twinkle", "Giggles", "Button", "Tilly", "Fuzzykins", "Poppy",
+  "Doodle", "Lila", "Wiffle", "Zippity",
+  "Nyxaris", "Vesperion", "Xyphos", "Thalor", "Lysandra", "Virex", "Xylaris", "Zanthe",
+  "Aetheris", "Zorathis", "Mystrion", "Lycoris", "Valtros", "Zyphra", "Zoltar", "Xeraph",
+  "Lythros", "Kalyx", "Shadros", "Valion", "Xandros", "Zyrith", "Caelum", "Arion",
+  "Aether", "Selene", "Cronus", "Nyx", "Orpheus", "Calypso", "Hyperion", "Hecate", "Atlas",
+  "Persephone", "Helios", "Elysium", "Athena", "Poseidon", "Circe", "Hades", "Aurora",
+  "Prometheus", "Artemis", "Triton", "Gaia", "Juno", "Odin", "Freya", "Loki", "Hera",
+  "Apollo", "Venus", "Hermes",
+  "Malzor", "Vortexis", "Zylok", "Krygor", "Valthor", "Nefarion", "Mordax", "Vraxon",
+  "Xylox", "Grimnar", "Zarkan", "Dreador", "Morvok", "Thalorak", "Virox", "Zevrath",
+  "Noctar", "Sableth", "Malakar", "Xerxes", "Vylos", "Zargon", "Krython", "Vorak", "Thrax",
+  "Skorn", "Dreadnox",
+  "Solara", "Nebula", "Aetheria", "Luminara", "Aquilon", "Vortexa", "Cyrene", "Aurion",
+  "Tempest", "Terrax", "Borealis", "Lyra", "Solaris", "Oceana", "Nimbus", "Comet", "Vesta",
+  "Seren", "Celeste", "Eclipse", "Orion", "Cascade", "Sylvan", "Galad",  "ShadowWalker", "StormBringer",
+  "MoonWhisper", "SolarFlare", "EclipseShade", "CelestialForge", "NebulaDrift",
+  "CosmicWanderer", "GalaxyChaser", "StellarEcho", "AstralVeil", "LunarTide",
+  "SolarisBlade", "VoidWarden", "PhoenixRising", "DragonHeart", "WolfSpirit",
+  "ThunderStrike", "FrostBite", "FlameDancer", "StormCaller", "ShadowMantle",
+  "IronWill", "SteelFist", "DiamondEdge", "ObsidianGaze", "EmeraldGlint",
+  "RubyFlare", "SapphireSky", "TopazLight", "AmethystVeil", "QuartzPulse",
+  "CrystalFlow", "JadeHarmony", "PearlShimmer", "OpalDream", "TurquoiseWave",
+  "OnyxShadow", "GarnetFire", "AquamarineDepth", "PeridotGlow", "ZirconSpark",
+  "MysticalAura", "EnchantedGlade", "FeywildStep", "PixieDustTrail", "SpriteSong",
+  "GoblinCackle", "DwarfForgeHammer", "ElvenGrace", "OrcishMight", "TrollStomp",
+  "WitchsCauldron", "WarlockCurse", "SorcererSpell", "MageInsight", "WizardStaff",
+  "PaladinHonor", "KnightVow", "BarbarianRage", "RogueStealth", "BardMelody",
+  "DruidWildcall", "ShamanTotem", "MonkDiscipline", "ClericPrayer", "NecromancerVeil",
+  "SummonerPact", "AlchemistElixir", "InventorGadget", "EngineerGear", "ArtificerSpark",
+  "HunterArrow", "ScoutTrail", "TrackerScent", "SurvivalistSkill", "PathfinderWay",
+  "NomadJourney", "WanderlustSpirit", "ExplorerMap", "AdventurerQuest", "TreasureFind",
+  "PiratePlunder", "CorsairSails", "SmugglerRoute", "BuccaneerSong", "PrivateerCode",
+  "OutlawBullet", "BanditMask", "RenegadePath", "RebelCry", "FreedomFighter",
+  "GuardianShield", "SentinelWatch", "WardenKey", "ProtectorVow", "DefenderStand",
+  "ChampionGlory", "VictorTriumph", "HeroicDeed", "LegendaryFeat", "MythicTale",
+  "AncientLore", "ElderWisdom", "SageAdvice", "OracleVision", "ProphetWord",
+  "SeerInsight", "DivinerSign", "AugurFate", "SoothsayerDream", "MysticRiddle",
+  "ArcaneKnowledge", "EsotericTruth", "OccultSecret", "HiddenPath", "ForgottenTome",
+  "LostArtifact", "AncientRelic", "TimelessEcho", "EternalFlame", "ImmortalSoul",
+  "UndyingWill", "DeathlessSpirit", "AfterlifeWhisper", "PhantomEcho", "GhostlyVeil",
+  "SpectralForm", "WraithGlide", "PoltergeistTrick", "HauntPresence", "SpiritsCall",
+  "ReaperScythe", "GraveWatcher", "BoneCollector", "UndeadArmy", "NecropolisGate",
+  "CursedTomb", "ForbiddenScroll", "DarkRitual", "BloodOath", "ShadowCovenant",
+  "SinisterGrin", "MalevolentGaze", "WickedLaugh", "VileScheme", "NefariousPlan",
+  "DiabolicalMind", "InfernalWill", "DemonicPact", "HellfireBrand", "AbyssalVoid",
+  "ChaosBringer", "AnarchyRule", "RebellionCry", "UprisingSpirit", "RevolutionHeart",
+  "FreedomFlame", "LibertyCall", "JusticeScale", "TruthLight", "HonorCode",
+  "ValorHeart", "CourageSoul", "BraveryMark", "GallantDeed", "NobleSpirit",
+  "KindnessTouch", "CompassionFlow", "EmpathyBridge", "UnderstandingEye", "PatienceThread",
+  "ForgivenessGift", "MercyHand", "GraceStep", "BenevolenceWave", "GenerosityWell",
+  "JoySpark", "HappinessBloom", "LaughterRing", "SmileGlow", "CheerBright",
+  "OptimismRay", "HopeAnchor", "DreamWeaver", "FantasyLand", "ImaginationSky",
+  "CreativityFlow", "InspirationSpark", "VisionaryMind", "InnovatorIdea", "PioneerTrail",
+  "LeaderVoice", "FollowerFaith", "TeamSpirit", "UnityBond", "CooperationHand",
+  "CollaborationGift", "PartnershipVow", "AlliancePact", "BrotherhoodTie", "SisterhoodBond",
+  "FriendshipLink", "CompanionTrail", "LoyaltySeal", "TrustHeart", "DevotionFlow",
+  "PassionFire", "DesireFlame", "LoveBloom", "AffectionTouch", "TendernessGaze",
+  "DevotedHeart", "CherishedSoul", "BelovedSpirit", "SweetWhisper", "GentleEmbrace",
+  "WarmthGlow", "ComfortHug", "SolacePeace", "HealingTouch", "RestorationFlow",
+  "RenewalDawn", "GrowthSpring", "EvolutionPath", "TransformationShift", "MetamorphosisWing",
+  "AscensionRise", "EnlightenmentLight", "AwakeningCall", "RealizationSpark", "UnderstandingFlow",
+  "ClarityMind", "InsightEye", "PerceptionLens", "AwarenessThread", "ConsciousnessWave",
+  "ExistenceRoot", "BeingCore", "LifeEssence", "VitalityFlow", "EnergySpark",
+  "PowerSurge", "StrengthCore", "MightForce", "DominionHold", "AuthorityVoice",
+  "RuleScepter", "ThroneSeat", "CrownGlory", "KingdomRealm", "EmpireSpan",
+  "DominionLand", "SovereignWill", "RegalPresence", "MajestyGaze", "RoyaltyMark",
+  "NobilitySpirit", "AristocratGrace", "EliteStatus", "PrestigeName", "LegacyTale",
+  "HeritageRoot", "TraditionThread", "CustomFlow", "CultureBloom", "SocietyWeb",
+  "CommunityHeart", "VillageSpirit", "TownSquare", "CitySkyline", "MetropolisPulse",
+  "CivilizationFlow", "ProgressPath", "DevelopmentTrail", "AdvancementStep", "InnovationSpark",
+  "TechnologyMind", "ScienceTruth", "ResearchQuest", "DiscoveryCall", "ExplorationDrive",
+  "KnowledgeTree", "WisdomWell", "LearningFlow", "EducationPath", "SchoolHouse",
+  "UniversityGate", "LibraryVault", "ArchiveTome", "RecordScroll", "HistoryPage",
+  "ChronicalFlow", "TimelineThread", "EpochMark", "AgeDawn", "EraSpan",
+  "PeriodFrame", "SeasonTurn", "YearCycle", "MonthPhase", "WeekPattern",
+  "DayLight", "NightShadow", "MorningGlow", "EveningHush", "MidnightVeil",
+  "DawnBreak", "SunrisePromise", "SunsetDream", "TwilightVeil", "DuskWhisper",
+  "StarLight", "MoonGlow", "GalaxySky", "NebulaCloud", "CosmosDeep",
+  "UniverseFlow", "DimensionGate", "PortalSpark", "RealmBridge", "WorldStep",
+  "PlanetSpin", "OrbitPath", "SatelliteTrail", "AsteroidDrift", "CometFlame",
+  "MeteorFall", "ConstellationMap", "ZodiacSign", "HorizonEdge", "SkyCanvas",
+  "CloudShape", "RainDrop", "ThunderRoll", "LightningFlash", "WindBreeze",
+  "StormSurge", "TornadoSpin", "HurricaneForce", "CycloneDance", "TyphoonWrath",
+  "BlizzardFrost", "SnowFlake", "IceShard", "GlacierFlow", "AvalancheCall",
+  "LandslideShift", "EarthquakeTremor", "VolcanoErupt", "MagmaFlow", "LavaStream",
+  "GeothermalHeat", "MineralCore", "GemstoneGlint", "CrystalVein", "OreDeposit",
+  "ResourceWell", "TreasureHoard", "WealthFlow", "ProsperityBloom", "FortuneGift",
+  "LuckCharm", "DestinyThread", "FateWeave", "KarmaBalance", "SynchronicitySpark",
+  "CoincidenceFlow"
+    ];
+    // === 🔼 МАССИВ ЗАВЕРШЁН — ЗАМЕНИТЕ ЕГО НА БОЛЬШОЙ СПИСОК 🔼 ===
+
+    // === ГЕНЕРАЦИЯ НИКА ===
+    function generateNickname() {
+      const firstChar = firstInput.value.trim().toLowerCase();
+      const length = parseInt(lengthInput.value) || 8;
+
+      // Фильтрация по длине
+      let filtered = nicknames.filter(name => name.length === length);
+
+      // Фильтрация по первой букве
+      if (firstChar) {
+        filtered = filtered.filter(name => name.toLowerCase().startsWith(firstChar));
+      }
+
+      // Если нет совпадений
+      if (filtered.length === 0) {
+        nickResult.textContent = "не найдено";
+        return;
+      }
+
+      // Выбираем случайный ник
+      const selected = filtered[Math.floor(Math.random() * filtered.length)];
+
+      // Анимация изменения символов
+      const current = nickResult.textContent;
+      let newText = '';
+      for (let i = 0; i < Math.max(current.length, selected.length); i++) {
+        if (i >= selected.length) {
+          newText += '';
+        } else if (i >= current.length || current[i] === '—') {
+          newText += selected[i];
+        } else {
+          newText += Math.random() > 0.6 ? selected[i] : current[i];
+        }
+      }
+      nickResult.textContent = newText;
+
+      // Через 180 мс — показываем итоговый ник
+      setTimeout(() => {
+        nickResult.textContent = selected;
+      }, 180);
+    }
+
+    // Клик по нику — копировать
+    nickResult.addEventListener('click', function () {
+      const text = this.textContent.trim();
+      if (text && text !== '—' && text !== 'не найдено') {
+        navigator.clipboard.writeText(text).then(() => {
+          this.style.opacity = '0.6';
+          setTimeout(() => { this.style.opacity = '1'; }, 200);
+        }).catch(err => {
+          console.warn('Копирование не удалось:', err);
+        });
+      }
+    });
+
+    // Кнопка "Сгенерировать"
+    genBtn.addEventListener('click', generateNickname);
+
+    // Enter в полях
+    [firstInput, lengthInput].forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          generateNickname();
+        }
+      });
+    });
+
+      // theme handling (persist to localStorage, toggle .light)
+document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
+  const themeBtn = document.getElementById('themeBtn');
+  if (!themeBtn) return;
+
+  function getTheme() {
+    return localStorage.getItem('ut_theme') || 'dark';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.classList.toggle('light', theme === 'light');
+    document.body.classList.toggle('light', theme === 'light');
+    themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    localStorage.setItem('ut_theme', theme);
+  }
+
+  applyTheme(getTheme());
+
+  themeBtn.addEventListener('click', () => {
+    applyTheme(getTheme() === 'light' ? 'dark' : 'light');
+  });
+});
+
+  // применяем сохранённую тему
+  applyTheme(getTheme());
+
+  // переключатель
+  themeBtn.addEventListener('click', () => {
+    applyTheme(getTheme() === 'light' ? 'dark' : 'light');
+  });
+});
+
+
+      // Utility: procedural fallback generator
+      function proceduralNick(firstChar, length) {
+        const consonants = 'bcdfghjklmnpqrstvwxyz';
+        const vowels = 'aeiou';
+        let name = '';
+        if (firstChar && /^[a-zA-Z]$/.test(firstChar)) name += firstChar.toUpperCase();
+        else name += (Math.random() > 0.5 ? consonants : vowels)[Math.floor(Math.random() * (Math.random() > 0.5 ? consonants.length : vowels.length))].toUpperCase();
+        let useVowel = Math.random() > 0.5;
+        while (name.length < length) {
+          if (useVowel) name += vowels[Math.floor(Math.random() * vowels.length)];
+          else name += consonants[Math.floor(Math.random() * consonants.length)];
+          useVowel = !useVowel;
+        }
+        return name.slice(0, length);
+      }
+
+      // Main generation logic (first letter optional, desired length)
+      function generateNickname() {
+        const firstChar = (firstInput.value || '').trim().toLowerCase();
+        const requestedLength = parseInt(lengthInput.value, 10) || 8;
+        const length = Math.max(3, Math.min(24, requestedLength));
+
+        // try exact length
+        let candidates = nicknames.filter(n => typeof n === 'string' && n.length === length);
+        if (firstChar) candidates = candidates.filter(n => n[0].toLowerCase() === firstChar);
+
+        let result = '';
+
+        if (candidates.length > 0) {
+          result = candidates[Math.floor(Math.random() * candidates.length)];
+        } else {
+          // try near lengths +/-2
+          let pool = nicknames.filter(n => n.length >= Math.max(3, length-2) && n.length <= Math.min(24, length+2));
+          if (firstChar) pool = pool.filter(n => n[0].toLowerCase() === firstChar);
+          if (pool.length > 0) {
+            const pick = pool[Math.floor(Math.random() * pool.length)];
+            if (pick.length === length) result = pick;
+            else if (pick.length > length) result = pick.slice(0, length);
+            else result = (pick + 'x'.repeat(length)).slice(0, length);
+          } else {
+            result = proceduralNick(firstChar, length);
+          }
+        }
+
+        // glitch-ish micro animation (no popups)
+        const current = (nickResult.textContent || '').trim();
+        const maxLen = Math.max(current.length, result.length);
+        let frames = '';
+        for (let i = 0; i < maxLen; i++) {
+          if (i < result.length && (i >= current.length || Math.random() > 0.5)) frames += result[i];
+          else if (i < current.length) frames += current[i];
+          else frames += result[i] || '';
+        }
+        nickResult.textContent = frames;
+        nickResult.style.opacity = '0.75';
+        nickResult.style.transform = 'translateY(-6px)';
+        setTimeout(() => {
+          nickResult.textContent = result;
+          nickResult.style.opacity = '';
+          nickResult.style.transform = '';
+        }, 160);
+      }
+
+      // events
+      genBtn && genBtn.addEventListener('click', generateNickname);
+      [firstInput, lengthInput].forEach(i => i && i.addEventListener('keydown', e => { if (e.key === 'Enter') generateNickname(); }));
+
+      // copy on click silently with tiny feedback
+      nickResult && nickResult.addEventListener('click', async () => {
+        const text = (nickResult.textContent || '').trim();
+        if (!text || text === '—') return;
+        try {
+          await navigator.clipboard.writeText(text);
+          nickResult.animate([{ transform: 'scale(1)' }, { transform: 'scale(.986)' }, { transform: 'scale(1)' }], { duration: 220, easing: 'cubic-bezier(.2,.9,.2,1)' });
+        } catch (e) { /* ignore silently */ }
+      });
+
+      // keyboard: space triggers generate when not in input
+document.addEventListener('keydown', (e) => {
+  if (
+    e.key === ' ' &&
+    document.activeElement &&
+    !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)
+  ) {
+    e.preventDefault();
+    generateNickname();
+  }
+});
+
+
+      // hydrate account and theme initially
+      try {
+        const acc = JSON.parse(localStorage.getItem('ut_account') || '{}');
+        if (acc) {
+          if (accName) accName.value = acc.name || '';
+          if (accEmail) accEmail.value = acc.email || '';
+        }
+      } catch(e){}
+
+      // initial fade-up animation if UI lib not loaded
+document.querySelectorAll('.fade-up').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity .55s ease, transform .55s ease';
+  setTimeout(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }, 80);
+});
+
+
+      // safeguard: placeholder
+      if (nickResult && nickResult.textContent.trim() === '') nickResult.textContent = '—';
+    })();
+  </script>
+
+</body>
+</html>

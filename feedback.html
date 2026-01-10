@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="ru">
+<head>
+
+  <script>
+    fetch('/shared/logo.html')
+      .then(r => r.text())
+      .then(html => document.head.insertAdjacentHTML('beforeend', html));
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Обратная связь — Ultimate Toolkit</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .feedback-card {
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 44px 48px;
+      border-radius: 26px;
+      box-shadow: 0 40px 120px rgba(0,0,0,.35);
+    }
+
+    .feedback-card h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .feedback-card p {
+      font-size: 15px;
+      opacity: .8;
+      margin-bottom: 22px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      opacity: .75;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: inherit;
+      outline: none;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .submit-btn {
+      margin-top: 18px;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #7c5cff, #06b6d4);
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(124,92,255,.45);
+      transition: transform .25s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .captcha {
+      margin-top: 12px;
+      font-size: 14px;
+      opacity: .85;
+    }
+
+    .honeypot {
+      display: none;
+    }
+.nav-double {
+  gap: 9px;
+}
+
+.nav-row {
+  display: flex;
+  gap: 9px;
+}
+
+
+/* pills остаются такими же */
+.nav-pills a {
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+/* ===============================
+   ULTIMATE TOOLKIT — FOOTER
+   =============================== */
+
+.ut-footer {
+  margin-top:73.5px;
+  padding: 28px 0;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+.ut-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+/* BRAND */
+
+.ut-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ut-footer-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c5cff, #06b6d4);
+  box-shadow:
+    0 10px 28px rgba(124,92,255,0.45);
+}
+
+.ut-footer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ut-footer-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ut-footer-copy {
+  font-size: 12.5px;
+  opacity: .6;
+}
+
+/* LINKS */
+
+.ut-footer-links {
+  display: flex;
+  gap: 22px;
+}
+
+.ut-footer-links a {
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: .75;
+  color: var(--text-main);
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
+
+}
+
+.ut-footer-links a:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+
+  </style>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+
+<script>
+  (function(){
+    emailjs.init('2pLEgh_dC6un7ZDmF');
+  })();
+</script>
+
+<body>
+
+<div id="noise"></div>
+<div class="gradient-animated"></div>
+<canvas id="particle-canvas"></canvas>
+<!-- =====================
+       HEADER
+     ===================== -->
+<header class="header" role="banner">
+  <div class="header-inner container">
+
+    <div class="brand">
+      <div class="logo">UT</div>
+      <div>
+        <div class="site-title">Ultimate Toolkit</div>
+        <div class="site-sub">
+	Часы · Никнеймы · Пароли · Рандомайзер · Колесо · Даты
+        </div>
+      </div>
+    </div>
+
+<nav class="nav-pills nav-double" aria-label="Навигация">
+  <div class="nav-row">
+    <a href="index.html">Главная</a>
+    <a href="timer.html">Часы</a>
+    <a href="nick.html">Никнеймы</a>
+    <a href="password.html">Пароли</a>
+    <a href="random.html">Рандомайзер</a>
+  </div>
+  <div class="nav-row nav-row-sub">
+    <a href="wheel.html">Колесо фортуны</a>
+    <a href="countdown.html">Отчёт до даты</a>
+  </div>
+</nav>
+
+    <div class="header-actions">
+      <button id="themeBtn" class="icon-btn">🌙</button>
+      <button id="settingsBtn" class="icon-btn">⚙️</button>
+    </div>
+
+  </div>
+</header>
+
+
+<main class="container">
+
+  <div class="card-glass feedback-card fade-up">
+
+    <h1>Обратная связь</h1>
+<div
+  id="successNotice"
+  style="
+    display:none;
+    margin-bottom:18px;
+    padding:14px 18px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#22c55e,#06b6d4);
+    color:white;
+    font-weight:600;
+    box-shadow:0 12px 30px rgba(34,197,94,.35);
+  "
+>
+  ✅ Сообщение успешно отправлено
+</div>
+
+    <p>
+В сообщении обязательно укажите свои данные для обратной связи.
+    </p>
+<form id="feedbackForm">
+
+  <!-- Honeypot -->
+  <input type="text" name="company" class="honeypot">
+
+  <div class="form-group">
+    <label>Сообщение</label>
+    <textarea name="message" required placeholder="Сообщение можно отправить только 1 раз в сутки в целях защиты от спама."></textarea>
+  </div>
+<div class="form-group captcha">
+  <label>Введите код с картинки</label>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+    <canvas id="captchaCanvas" width="140" height="46"
+      style="border-radius:10px;background:rgba(255,255,255,.06)">
+    </canvas>
+
+    <button type="button" id="refreshCaptcha"
+      style="opacity:.7;font-size:13px">
+      ↻
+    </button>
+  </div>
+
+  <input
+    type="text"
+    id="captchaInput"
+    placeholder="Код"
+    autocomplete="off"
+    required
+  >
+</div>
+
+
+  <button type="submit" class="submit-btn">
+    Отправить сообщение
+  </button>
+
+</form>
+
+  </div>
+
+</main>
+
+<footer class="ut-footer">
+  <div class="ut-footer-inner container">
+
+    <!-- LEFT: BRAND -->
+    <div class="ut-footer-brand">
+      <div class="ut-footer-logo">UT</div>
+      <div class="ut-footer-text">
+        <div class="ut-footer-title">Ultimate Toolkit</div>
+        <div class="ut-footer-copy">
+          © 2026<span id="footerYear"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: LINKS -->
+    <div class="ut-footer-links">
+      <a href="feedback.html">Обратная связь</a>
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+
+  </div>
+</footer>
+
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel settings-panel card-glass" role="document" aria-labelledby="settingsTitle">
+      <button class="modal-close" id="settingsClose" aria-label="Закрыть">✖</button>
+      <h3 id="settingsTitle">Настройки</h3>
+
+      <div class="tabs" style="display:flex;gap:8px;margin-top:12px">
+        <button class="tab" data-tab="personal">Персонализация</button>
+        <button class="tab" data-tab="export">Экспорт</button>
+      </div>
+
+      <div class="tab-content" style="margin-top:12px">
+
+
+        <!-- PERSONAL -->
+        <div class="tab-pane hidden" data-pane="personal">
+          <h4>Персонализация интерфейса</h4>
+          <div class="section">
+            <label>Тема</label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="themeLight" class="btn-toggle">Светлая</button>
+              <button id="themeDark" class="btn-toggle">Тёмная</button>
+            </div>
+
+            <label style="margin-top:12px">Размер UI</label>
+            <select id="fontSizePanel" class="form-select" style="margin-top:8px">
+              <option value="15">15px</option>
+              <option value="16" selected>16px</option>
+              <option value="18">18px</option>
+              <option value="20">20px</option>
+            </select>
+
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button id="particlesPanelToggle" class="btn-toggle">Частицы</button>
+              <button id="reducedMotionToggle" class="btn-toggle">Reduced motion</button>
+            </div>
+
+            <label style="margin-top:12px">UI плотность</label>
+            <select id="uiDensity" class="form-select">
+              <option value="compact">Компакт</option>
+              <option value="normal" selected>Обычная</option>
+              <option value="comfortable">Комфорт</option>
+            </select>
+          </div>
+        </div>
+
+
+        <!-- EXPORT / IMPORT -->
+        <div class="tab-pane hidden" data-pane="export">
+          <h4>Экспорт / Импорт настроек</h4>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="exportBtn" class="btn-primary" style="flex:1">Экспорт в JSON</button>
+            <button id="importBtn" class="btn-ghost" style="flex:1">Импорт (вставить JSON)</button>
+          </div>
+          <textarea id="importArea" placeholder='Вставь JSON и нажми "Импорт"' style="width:100%;height:120px;margin-top:10px;padding:10px;border-radius:8px;background:transparent;border:1px solid var(--border);color:inherit"></textarea>
+          <div class="small-muted" style="margin-top:8px">Экспортирует все настройки, импорт применит и сохранит локально.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <script>
+(function () {
+  'use strict';
+  const doc = document;
+  const root = doc.documentElement;
+
+  // Elements
+  const themeBtn = doc.getElementById('themeBtn');
+  const settingsBtn = doc.getElementById('settingsBtn');
+
+  const settingsModal = doc.getElementById('settingsModal');
+  const settingsClose = doc.getElementById('settingsClose');
+
+  const yearEl = doc.getElementById('year');
+
+  // Controls inside settings
+  const tabButtons = Array.from(doc.querySelectorAll('.tab'));
+  const tabPanes = Array.from(doc.querySelectorAll('.tab-pane'));
+
+  // quick controls
+  const fontSizeSelect = doc.getElementById('fontSize');
+  const particlesBtn = doc.getElementById('toggleParticles');
+  const soundsBtn = doc.getElementById('toggleSounds');
+
+  // panel controls
+  const themeLightBtn = doc.getElementById('themeLight');
+  const themeDarkBtn = doc.getElementById('themeDark');
+  const fontSizePanel = doc.getElementById('fontSizePanel');
+  const particlesPanelToggle = doc.getElementById('particlesPanelToggle');
+  const reducedMotionToggle = doc.getElementById('reducedMotionToggle');
+  const saveAccountBtn = doc.getElementById('saveAccount');
+  const resetAccountBtn = doc.getElementById('resetAccount');
+  const accName = doc.getElementById('accName');
+  const accEmail = doc.getElementById('accEmail');
+
+  const exportBtn = doc.getElementById('exportBtn');
+  const importBtn = doc.getElementById('importBtn');
+  const importArea = doc.getElementById('importArea');
+
+
+
+  // Particles canvas
+  const canvas = doc.getElementById('particle-canvas');
+  const ctx = canvas && canvas.getContext ? canvas.getContext('2d') : null;
+  let particles = [];
+  let particleEnabled = localStorage.getItem('ut_particles') !== 'false';
+  let raf = null;
+
+  // Year
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Helpers: save/load settings
+  function getDefaultSettings(){
+    return {
+      theme: localStorage.getItem('ut_theme') || 'dark',
+      fontSize: localStorage.getItem('ut_font') || '16',
+      particles: localStorage.getItem('ut_particles') !== 'false',
+      sounds: localStorage.getItem('ut_sounds') === 'true',
+      reducedMotion: localStorage.getItem('ut_reduced') === 'true',
+      uiDensity: localStorage.getItem('ut_density') || 'normal',
+      account: JSON.parse(localStorage.getItem('ut_account') || '{}'),
+      security: {
+        twoFA: localStorage.getItem('ut_2fa') === 'true',
+        sessionLock: localStorage.getItem('ut_lock') === 'true'
+      },
+      notify: {
+        push: localStorage.getItem('ut_push') === 'true',
+        mail: localStorage.getItem('ut_mail') === 'true'
+      }
+    };
+  }
+  let settings = getDefaultSettings();
+
+  // Apply theme
+  function applyTheme(theme){
+    if(theme === 'light') root.classList.add('light');
+    else root.classList.remove('light');
+    localStorage.setItem('ut_theme', theme);
+    if(themeBtn) themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    settings.theme = theme;
+  }
+  applyTheme(settings.theme);
+
+  // Apply font size
+  function applyFontSize(px){
+    root.style.setProperty('--font-size-base', px + 'px');
+    localStorage.setItem('ut_font', px);
+    if (fontSizeSelect) fontSizeSelect.value = px;
+    if (fontSizePanel) fontSizePanel.value = px;
+    settings.fontSize = px;
+  }
+  applyFontSize(settings.fontSize);
+
+  // Reduced motion
+  function applyReducedMotion(on){
+    if(on) root.classList.add('reduced-motion'); else root.classList.remove('reduced-motion');
+    localStorage.setItem('ut_reduced', on ? 'true' : 'false');
+    settings.reducedMotion = on;
+  }
+  applyReducedMotion(settings.reducedMotion);
+
+  // UI density
+  function applyDensity(value){
+    document.body.dataset.density = value;
+    localStorage.setItem('ut_density', value);
+    settings.uiDensity = value;
+  }
+  applyDensity(localStorage.getItem('ut_density') || 'normal');
+
+  // Particles implementation
+  function resizeCanvas(){
+    if(!canvas || !ctx) return;
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(innerWidth * dpr);
+    canvas.height = Math.floor(innerHeight * dpr);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function createParticles(count = 88){
+    particles = [];
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        r: 0.6 + Math.random()*4.4,
+        vx: (Math.random()-0.5)*0.6,
+        vy: (Math.random()-0.5)*0.6,
+        hue: 170 + Math.random()*150,
+        a: 0.03 + Math.random()*0.08
+      });
+    }
+  }
+  createParticles(88);
+
+  function drawParticles(){
+    if(!canvas || !ctx) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(!particleEnabled) return;
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -40) p.x = innerWidth + 40; if(p.x > innerWidth + 40) p.x = -40;
+      if(p.y < -40) p.y = innerHeight + 40; if(p.y > innerHeight + 40) p.y = -40;
+      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*8);
+      g.addColorStop(0, `hsla(${p.hue},85%,64%,${p.a})`);
+      g.addColorStop(0.6, `hsla(${p.hue},70%,50%,${p.a*0.4})`);
+      g.addColorStop(1, `hsla(${p.hue},60%,40%,0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r*8,0,Math.PI*2);
+      ctx.fill();
+    }
+    raf = requestAnimationFrame(drawParticles);
+  }
+
+  function startParticles(){
+    particleEnabled = true; localStorage.setItem('ut_particles','true'); settings.particles = true;
+    if(!raf) drawParticles();
+  }
+  function stopParticles(){
+    particleEnabled = false; localStorage.setItem('ut_particles','false'); settings.particles = false;
+    if(raf) { cancelAnimationFrame(raf); raf = null; ctx && ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  if(settings.particles) drawParticles();
+
+  // Toggle handlers
+  themeBtn?.addEventListener('click', ()=> applyTheme(root.classList.contains('light') ? 'dark' : 'light'));
+  themeLightBtn?.addEventListener('click', ()=> applyTheme('light'));
+  themeDarkBtn?.addEventListener('click', ()=> applyTheme('dark'));
+
+  fontSizeSelect?.addEventListener('change', e => applyFontSize(e.target.value));
+  fontSizePanel?.addEventListener('change', e => applyFontSize(e.target.value));
+
+  particlesBtn?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    if(particlesBtn) particlesBtn.classList.toggle('active', particleEnabled);
+  });
+  particlesPanelToggle?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    particlesPanelToggle.classList.toggle('active', particleEnabled);
+  });
+
+  reducedMotionToggle?.addEventListener('click', ()=> {
+    settings.reducedMotion = !settings.reducedMotion;
+    applyReducedMotion(settings.reducedMotion);
+  });
+
+
+  // Tabs logic (settings)
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', ()=> {
+      tabButtons.forEach(b => b.classList.toggle('active', b === btn));
+      const target = btn.dataset.tab;
+      tabPanes.forEach(p => p.classList.toggle('hidden', p.dataset.pane !== target));
+    });
+  });
+
+  // Modals: open only by buttons (not visible by default)
+  function openModal(modal){
+    if(!modal) return;
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    const f = modal.querySelector('input,button,select,textarea');
+    if(f) setTimeout(()=> f.focus(), 120);
+  }
+  function closeModal(modal){
+    if(!modal) return;
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+
+  // Wire buttons
+  settingsBtn?.addEventListener('click', ()=> openModal(settingsModal));
+  settingsClose?.addEventListener('click', ()=> closeModal(settingsModal));
+  doc.querySelectorAll('[data-close="true"]').forEach(el => el.addEventListener('click', ()=> { closeModal(settingsModal); }));
+
+  // Close on escape
+  window.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
+      closeModal(settingsModal);
+    }
+  });
+
+
+
+  // Export / Import
+  exportBtn?.addEventListener('click', ()=> {
+    const toExport = {
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    };
+    const blob = new Blob([JSON.stringify(toExport, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = doc.createElement('a'); a.href = url; a.download = 'ut_settings.json'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  importBtn?.addEventListener('click', ()=> {
+    try {
+      const data = JSON.parse(importArea.value);
+      if(!data) throw new Error('Пустой JSON');
+      if(data.theme) applyTheme(data.theme);
+      if(data.fontSize) applyFontSize(data.fontSize);
+      if(typeof data.particles !== 'undefined'){ data.particles ? startParticles() : stopParticles(); }
+      if(typeof data.sounds !== 'undefined'){ settings.sounds = !!data.sounds; localStorage.setItem('ut_sounds', settings.sounds ? 'true' : 'false'); }
+      if(typeof data.reducedMotion !== 'undefined'){ applyReducedMotion(!!data.reducedMotion); }
+      if(data.uiDensity) applyDensity(data.uiDensity);
+      if(data.account) { settings.account = data.account; localStorage.setItem('ut_account', JSON.stringify(data.account)); accName.value = data.account.name || ''; accEmail.value = data.account.email || ''; }
+      if(data.security){ settings.security = data.security; localStorage.setItem('ut_2fa', data.security.twoFA ? 'true':'false'); twoFAToggle.checked = !!data.security.twoFA; }
+      if(data.notify){ settings.notify = data.notify; localStorage.setItem('ut_push', data.notify.push ? 'true':'false'); pushToggle.checked = !!data.notify.push; }
+      alert('Настройки импортированы и применены.');
+    } catch(err){
+      alert('Ошибка импорта: ' + err.message);
+    }
+  });
+
+
+
+  // Fill UI from settings on load
+  function hydrateUI(){
+    if(fontSizeSelect) fontSizeSelect.value = settings.fontSize;
+    if(fontSizePanel) fontSizePanel.value = settings.fontSize;
+    if(particlesBtn) particlesBtn.classList.toggle('active', settings.particles);
+    if(soundsBtn) soundsBtn.classList.toggle('active', settings.sounds);
+    if(particlesPanelToggle) particlesPanelToggle.classList.toggle('active', settings.particles);
+    if(twoFAToggle) twoFAToggle.checked = settings.security.twoFA;
+    if(sessionLockToggle) sessionLockToggle.checked = settings.security.sessionLock;
+    if(pushToggle) pushToggle.checked = settings.notify && settings.notify.push;
+    if(mailToggle) mailToggle.checked = settings.notify && settings.notify.mail;
+    if(settings.account){ accName.value = settings.account.name || ''; accEmail.value = settings.account.email || ''; }
+  }
+  hydrateUI();
+
+  // Ensure modals are hidden initially
+  closeModal(settingsModal);
+
+  // micro-interaction: press animation
+  doc.addEventListener('pointerdown', e => {
+    const el = e.target.closest('button, a');
+    if(!el) return;
+    el.animate([{ transform: 'scale(.995)' }, { transform: 'scale(1)' }], { duration: 140, easing: 'cubic-bezier(.2,.9,.2,1)' });
+  });
+
+  // convenience: save settings on unload
+  window.addEventListener('beforeunload', ()=> {
+    localStorage.setItem('ut_settings_snapshot', JSON.stringify({
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    }));
+  });
+
+})();
+  </script>
+<script>
+(function () {
+  'use strict';
+
+  /* ==============================
+     FEEDBACK + CAPTCHA ENGINE
+     Ultimate Toolkit
+     ============================== */
+
+  const form = document.getElementById('feedbackForm');
+  const notice = document.getElementById('successNotice');
+  const captchaCanvas = document.getElementById('captchaCanvas');
+  const captchaInput = document.getElementById('captchaInput');
+  const refreshBtn = document.getElementById('refreshCaptcha');
+  const honeypot = form ? form.querySelector('.honeypot') : null;
+
+  if (!form || !captchaCanvas || !captchaInput || !refreshBtn) {
+    console.warn('[Feedback] Required elements not found');
+    return;
+  }
+
+  const ctx = captchaCanvas.getContext('2d');
+
+  /* ==============================
+     FINGERPRINT (local, lightweight)
+     ============================== */
+
+  const fingerprint = btoa(
+    navigator.userAgent +
+    screen.width + 'x' + screen.height +
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
+
+  const STORAGE_PREFIX = 'ut_feedback_' + fingerprint;
+
+  /* ==============================
+     CAPTCHA CONFIG
+     ============================== */
+
+  const CAPTCHA_LENGTH = 5;
+  const CAPTCHA_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let captchaCode = '';
+
+  function randomChar() {
+    return CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)];
+  }
+
+  function generateCaptchaCode() {
+    captchaCode = '';
+    for (let i = 0; i < CAPTCHA_LENGTH; i++) {
+      captchaCode += randomChar();
+    }
+  }
+
+  function drawCaptchaNoise() {
+    for (let i = 0; i < 35; i++) {
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fillRect(
+        Math.random() * captchaCanvas.width,
+        Math.random() * captchaCanvas.height,
+        2,
+        2
+      );
+    }
+  }
+
+  function drawCaptchaText() {
+    ctx.font = '700 26px system-ui, -apple-system, Segoe UI, sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+
+    [...captchaCode].forEach((char, i) => {
+      const x = 20 + i * 22;
+      const y = captchaCanvas.height / 2 + (Math.random() * 6 - 3);
+      const angle = Math.random() * 0.5 - 0.25;
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(char, 0, 0);
+      ctx.restore();
+    });
+  }
+
+  function renderCaptcha() {
+    generateCaptchaCode();
+
+    ctx.clearRect(0, 0, captchaCanvas.width, captchaCanvas.height);
+    ctx.fillStyle = 'rgba(255,255,255,0.02)';
+    ctx.fillRect(0, 0, captchaCanvas.width, captchaCanvas.height);
+
+    drawCaptchaNoise();
+    drawCaptchaText();
+  }
+
+  refreshBtn.addEventListener('click', () => {
+    renderCaptcha();
+    captchaInput.value = '';
+  });
+
+  renderCaptcha();
+  /* ==============================
+     RATE LIMIT (1 MESSAGE / DAY)
+     ============================== */
+
+  function canSendToday() {
+    const today = new Date().toISOString().slice(0, 10);
+    const lastDay = localStorage.getItem(STORAGE_PREFIX + '_day');
+    return lastDay !== today;
+  }
+
+  function saveSendDay() {
+    const today = new Date().toISOString().slice(0, 10);
+    localStorage.setItem(STORAGE_PREFIX + '_day', today);
+    localStorage.setItem(STORAGE_PREFIX + '_time', Date.now());
+  }
+
+  /* ==============================
+     FORM SUBMIT HANDLER
+     ============================== */
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // honeypot (боты)
+    if (honeypot && honeypot.value) {
+      return;
+    }
+
+    // captcha validation
+    if (captchaInput.value.trim().toUpperCase() !== captchaCode) {
+      alert('Неверный код с картинки');
+      captchaInput.value = '';
+      renderCaptcha();
+      return;
+    }
+
+    // rate limit check
+    if (!canSendToday()) {
+      alert('Можно отправить сообщение только один раз в сутки');
+      return;
+    }
+
+    // send message via EmailJS
+    emailjs.send(
+      'service_q6tg8to',
+      'template_1z9myqk',
+      {
+        message: form.message.value,
+        page: location.href,
+        fingerprint: fingerprint,
+        date: new Date().toLocaleString()
+      }
+    ).then(() => {
+
+      saveSendDay();
+      form.reset();
+      renderCaptcha();
+
+      notice.style.display = 'block';
+      notice.scrollIntoView({ behavior: 'smooth' });
+
+    }).catch(err => {
+      console.error('[Feedback] Send error:', err);
+      alert('Ошибка отправки. Попробуй позже.');
+      renderCaptcha();
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

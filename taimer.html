@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="ru" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Секундомер — Ultimate Toolkit</title>
+
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+/* ===============================
+   ULTIMATE TOOLKIT — FOOTER
+   =============================== */
+
+.ut-footer {
+  margin-top: 255px;
+  padding: 28px 0;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+.ut-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+/* BRAND */
+
+.ut-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ut-footer-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c5cff, #06b6d4);
+  box-shadow:
+    0 10px 28px rgba(124,92,255,0.45);
+}
+
+.ut-footer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ut-footer-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ut-footer-copy {
+  font-size: 12.5px;
+  opacity: .6;
+}
+
+/* LINKS */
+
+.ut-footer-links {
+  display: flex;
+  gap: 22px;
+}
+
+.ut-footer-links a {
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: .75;
+  color: var(--text-main);
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
+
+}
+
+.ut-footer-links a:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+
+
+/* =============================== TIMER PAGE — PREMIUM =============================== */
+
+.time-layout{
+  display:grid;
+  grid-template-columns:86px 1fr;
+  gap:32px;
+  max-width:1280px;
+  margin:36px auto;
+  padding:0 20px;
+}
+
+/* LEFT NAV */
+.time-nav{
+  position:sticky;
+  top:120px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.time-nav a{
+  height:72px;
+  border-radius:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);
+  border:1px solid rgba(255,255,255,.05);
+  transition:.35s;
+}
+.time-nav a.active{
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);
+  color:white;
+  box-shadow:0 0 42px rgba(99,102,241,.45);
+}
+
+/* MAIN PANEL */
+.timer-panel{
+  padding:42px;
+  border-radius:28px;
+  text-align:center;
+}
+
+/* TIMER DISPLAY */
+.timer-display{
+  font-size:92px;
+  font-weight:900;
+  letter-spacing:6px;
+  margin:40px 0 30px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings: "tnum";
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  white-space: nowrap;
+
+}
+
+/* CONTROLS */
+.timer-controls{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-top:26px;
+}
+
+.timer-btn{
+  padding:18px 0;
+  border-radius:18px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.4px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);
+  box-shadow:0 12px 36px rgba(0,0,0,.35);
+  transition:.35s;
+  cursor:pointer;
+}
+
+.timer-btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 52px rgba(0,0,0,.55);
+}
+
+.timer-btn.start{
+  background:linear-gradient(135deg,#22c55e,#4ade80);
+  color:#022c22;
+}
+
+.timer-btn.pause{
+  background:linear-gradient(135deg,#f59e0b,#fbbf24);
+  color:#3b2500;
+}
+
+.timer-btn.lap{
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);
+  color:white;
+}
+
+.timer-btn.reset{
+  background:linear-gradient(135deg,#ef4444,#f87171);
+  color:#450a0a;
+}
+
+/* LAPS */
+.laps{
+  margin-top:34px;
+  max-height:220px;
+  overflow:auto;
+  text-align:left;
+}
+.laps div{
+  padding:12px 18px;
+  border-radius:14px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  margin-bottom:10px;
+  font-weight:700;
+}
+</style>
+  <script>
+    fetch('/shared/logo.html')
+      .then(r => r.text())
+      .then(html => {
+        document.head.insertAdjacentHTML('beforeend', html);
+      });
+  </script>
+</head>
+
+<body>
+<div id="noise"></div>
+<div class="gradient-animated"></div>
+<canvas id="particle-canvas"></canvas>
+
+
+  <!-- HEADER -->
+  <header class="header" role="banner" aria-label="Главная шапка">
+    <div class="header-inner container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">UT</div>
+        <div>
+          <div class="site-title">Ultimate Toolkit</div>
+          <div class="site-sub">Часы · Никнеймы · Пароли · Рандомайзер · Колесо · Даты</div>          
+        </div>
+      </div>
+
+      <nav class="nav-pills" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="timer.html" class="active">Часы</a>
+        <a href="nick.html">Никнеймы</a>
+        <a href="password.html">Пароли</a>
+        <a href="random.html">Рандомайзер</a>
+        <a href="wheel.html">Колесо фортуны</a>
+        <a href="countdown.html">Отчёт до даты</a>
+      </nav>
+
+      <div class="header-actions" role="toolbar" aria-label="Действия">
+        <button id="themeBtn" class="icon-btn" aria-pressed="false" title="Сменить тему">🌙</button>
+        <button id="settingsBtn" class="icon-btn" title="Настройки">⚙️</button>
+      </div>
+    </div>
+  </header>
+<main class="time-layout">
+
+	
+
+<nav class="time-nav">
+  <a href="timer.html">⏲<small>Часы</small></a>
+  <a href="clock-live.html">🕗<small>Текущее</small></a>
+  <a href="stopwatch.html">⏲️<small>Таймер</small></a>
+  <a class="active" href="taimer.html">⏱️<small>Секундомер</small></a>
+  <a href="countdown.html">⌛<small>Даты</small></a>
+</nav>
+<section class="timer-panel card-glass">
+
+<h2 style="font-size:52px;font-weight:900">Секундомер</h2>
+
+<div id="timerDisplay" class="timer-display">00:00:00</div>
+
+<div class="timer-controls">
+  <button class="timer-btn start">▶ Запуск</button>
+  <button class="timer-btn pause">⏸ Пауза</button>
+  <button class="timer-btn lap">🏁 Круг</button>
+  <button class="timer-btn reset">⟲ Сброс</button>
+</div>
+
+<div id="laps" class="laps"></div>
+
+</section>
+</main>
+<footer class="ut-footer">
+  <div class="ut-footer-inner container">
+
+    <!-- LEFT: BRAND -->
+    <div class="ut-footer-brand">
+      <div class="ut-footer-logo">UT</div>
+      <div class="ut-footer-text">
+        <div class="ut-footer-title">Ultimate Toolkit</div>
+        <div class="ut-footer-copy">
+          © 2026<span id="footerYear"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: LINKS -->
+    <div class="ut-footer-links">
+      <a href="feedback.html">Обратная связь</a>
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+
+  </div>
+</footer>
+
+
+<script src="ui.js"></script>
+<script>
+/* ====== HIGH PRECISION STOPWATCH (ms) ====== */
+
+let startTime = 0;
+let elapsed = 0;
+let running = false;
+let raf = null;
+
+const display = document.getElementById("timerDisplay");
+const laps = document.getElementById("laps");
+
+function formatTime(ms){
+  const total = Math.floor(ms);
+  const h = String(Math.floor(total / 3600000)).padStart(2,"0");
+  const m = String(Math.floor(total / 60000) % 60).padStart(2,"0");
+  const s = String(Math.floor(total / 1000) % 60).padStart(2,"0");
+  const cs = String(Math.floor((total % 1000) / 10)).padStart(2,"0");
+  return `${h}:${m}:${s}.${cs}`;
+}
+
+function loop(now){
+  if(!running) return;
+  elapsed = now - startTime;
+  display.textContent = formatTime(elapsed);
+  raf = requestAnimationFrame(loop);
+}
+
+/* START */
+document.querySelector(".start").onclick = () => {
+  if(running) return;
+  running = true;
+  startTime = performance.now() - elapsed;
+  raf = requestAnimationFrame(loop);
+};
+
+/* PAUSE */
+document.querySelector(".pause").onclick = () => {
+  running = false;
+  cancelAnimationFrame(raf);
+};
+
+/* RESET */
+document.querySelector(".reset").onclick = () => {
+  running = false;
+  cancelAnimationFrame(raf);
+  elapsed = 0;
+  laps.innerHTML = "";
+  display.textContent = "00:00:00.00";
+};
+
+/* LAP */
+document.querySelector(".lap").onclick = () => {
+  if(!elapsed) return;
+  const d = document.createElement("div");
+  d.textContent = formatTime(elapsed);
+  laps.prepend(d);
+};
+
+/* INIT */
+display.textContent = "00:00:00.00";
+</script>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel settings-panel card-glass" role="document" aria-labelledby="settingsTitle">
+      <button class="modal-close" id="settingsClose" aria-label="Закрыть">✖</button>
+      <h3 id="settingsTitle">Настройки</h3>
+
+      <div class="tabs" style="display:flex;gap:8px;margin-top:12px">
+        <button class="tab" data-tab="personal">Персонализация</button>
+        <button class="tab" data-tab="export">Экспорт</button>
+      </div>
+
+      <div class="tab-content" style="margin-top:12px">
+
+
+        <!-- PERSONAL -->
+        <div class="tab-pane hidden" data-pane="personal">
+          <h4>Персонализация интерфейса</h4>
+          <div class="section">
+            <label>Тема</label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="themeLight" class="btn-toggle">Светлая</button>
+              <button id="themeDark" class="btn-toggle">Тёмная</button>
+            </div>
+
+            <label style="margin-top:12px">Размер UI</label>
+            <select id="fontSizePanel" class="form-select" style="margin-top:8px">
+              <option value="15">15px</option>
+              <option value="16" selected>16px</option>
+              <option value="18">18px</option>
+              <option value="20">20px</option>
+            </select>
+
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button id="particlesPanelToggle" class="btn-toggle">Частицы</button>
+              <button id="reducedMotionToggle" class="btn-toggle">Reduced motion</button>
+            </div>
+
+            <label style="margin-top:12px">UI плотность</label>
+            <select id="uiDensity" class="form-select">
+              <option value="compact">Компакт</option>
+              <option value="normal" selected>Обычная</option>
+              <option value="comfortable">Комфорт</option>
+            </select>
+          </div>
+        </div>
+
+
+        <!-- EXPORT / IMPORT -->
+        <div class="tab-pane hidden" data-pane="export">
+          <h4>Экспорт / Импорт настроек</h4>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="exportBtn" class="btn-primary" style="flex:1">Экспорт в JSON</button>
+            <button id="importBtn" class="btn-ghost" style="flex:1">Импорт (вставить JSON)</button>
+          </div>
+          <textarea id="importArea" placeholder='Вставь JSON и нажми "Импорт"' style="width:100%;height:120px;margin-top:10px;padding:10px;border-radius:8px;background:transparent;border:1px solid var(--border);color:inherit"></textarea>
+          <div class="small-muted" style="margin-top:8px">Экспортирует все настройки, импорт применит и сохранит локально.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <script>
+(function () {
+  'use strict';
+  const doc = document;
+  const root = doc.documentElement;
+
+  // Elements
+  const themeBtn = doc.getElementById('themeBtn');
+  const settingsBtn = doc.getElementById('settingsBtn');
+
+  const settingsModal = doc.getElementById('settingsModal');
+  const settingsClose = doc.getElementById('settingsClose');
+
+  const yearEl = doc.getElementById('year');
+
+  // Controls inside settings
+  const tabButtons = Array.from(doc.querySelectorAll('.tab'));
+  const tabPanes = Array.from(doc.querySelectorAll('.tab-pane'));
+
+  // quick controls
+  const fontSizeSelect = doc.getElementById('fontSize');
+  const particlesBtn = doc.getElementById('toggleParticles');
+  const soundsBtn = doc.getElementById('toggleSounds');
+
+  // panel controls
+  const themeLightBtn = doc.getElementById('themeLight');
+  const themeDarkBtn = doc.getElementById('themeDark');
+  const fontSizePanel = doc.getElementById('fontSizePanel');
+  const particlesPanelToggle = doc.getElementById('particlesPanelToggle');
+  const reducedMotionToggle = doc.getElementById('reducedMotionToggle');
+  const saveAccountBtn = doc.getElementById('saveAccount');
+  const resetAccountBtn = doc.getElementById('resetAccount');
+  const accName = doc.getElementById('accName');
+  const accEmail = doc.getElementById('accEmail');
+
+  const exportBtn = doc.getElementById('exportBtn');
+  const importBtn = doc.getElementById('importBtn');
+  const importArea = doc.getElementById('importArea');
+
+
+
+  // Particles canvas
+  const canvas = doc.getElementById('particle-canvas');
+  const ctx = canvas && canvas.getContext ? canvas.getContext('2d') : null;
+  let particles = [];
+  let particleEnabled = localStorage.getItem('ut_particles') !== 'false';
+  let raf = null;
+
+  // Year
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Helpers: save/load settings
+  function getDefaultSettings(){
+    return {
+      theme: localStorage.getItem('ut_theme') || 'dark',
+      fontSize: localStorage.getItem('ut_font') || '16',
+      particles: localStorage.getItem('ut_particles') !== 'false',
+      sounds: localStorage.getItem('ut_sounds') === 'true',
+      reducedMotion: localStorage.getItem('ut_reduced') === 'true',
+      uiDensity: localStorage.getItem('ut_density') || 'normal',
+      account: JSON.parse(localStorage.getItem('ut_account') || '{}'),
+      security: {
+        twoFA: localStorage.getItem('ut_2fa') === 'true',
+        sessionLock: localStorage.getItem('ut_lock') === 'true'
+      },
+      notify: {
+        push: localStorage.getItem('ut_push') === 'true',
+        mail: localStorage.getItem('ut_mail') === 'true'
+      }
+    };
+  }
+  let settings = getDefaultSettings();
+
+  // Apply theme
+  function applyTheme(theme){
+    if(theme === 'light') root.classList.add('light');
+    else root.classList.remove('light');
+    localStorage.setItem('ut_theme', theme);
+    if(themeBtn) themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    settings.theme = theme;
+  }
+  applyTheme(settings.theme);
+
+  // Apply font size
+  function applyFontSize(px){
+    root.style.setProperty('--font-size-base', px + 'px');
+    localStorage.setItem('ut_font', px);
+    if (fontSizeSelect) fontSizeSelect.value = px;
+    if (fontSizePanel) fontSizePanel.value = px;
+    settings.fontSize = px;
+  }
+  applyFontSize(settings.fontSize);
+
+  // Reduced motion
+  function applyReducedMotion(on){
+    if(on) root.classList.add('reduced-motion'); else root.classList.remove('reduced-motion');
+    localStorage.setItem('ut_reduced', on ? 'true' : 'false');
+    settings.reducedMotion = on;
+  }
+  applyReducedMotion(settings.reducedMotion);
+
+  // UI density
+  function applyDensity(value){
+    document.body.dataset.density = value;
+    localStorage.setItem('ut_density', value);
+    settings.uiDensity = value;
+  }
+  applyDensity(localStorage.getItem('ut_density') || 'normal');
+
+  // Particles implementation
+  function resizeCanvas(){
+    if(!canvas || !ctx) return;
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(innerWidth * dpr);
+    canvas.height = Math.floor(innerHeight * dpr);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function createParticles(count = 88){
+    particles = [];
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        r: 0.6 + Math.random()*4.4,
+        vx: (Math.random()-0.5)*0.6,
+        vy: (Math.random()-0.5)*0.6,
+        hue: 170 + Math.random()*150,
+        a: 0.03 + Math.random()*0.08
+      });
+    }
+  }
+  createParticles(88);
+
+  function drawParticles(){
+    if(!canvas || !ctx) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(!particleEnabled) return;
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -40) p.x = innerWidth + 40; if(p.x > innerWidth + 40) p.x = -40;
+      if(p.y < -40) p.y = innerHeight + 40; if(p.y > innerHeight + 40) p.y = -40;
+      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*8);
+      g.addColorStop(0, `hsla(${p.hue},85%,64%,${p.a})`);
+      g.addColorStop(0.6, `hsla(${p.hue},70%,50%,${p.a*0.4})`);
+      g.addColorStop(1, `hsla(${p.hue},60%,40%,0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r*8,0,Math.PI*2);
+      ctx.fill();
+    }
+    raf = requestAnimationFrame(drawParticles);
+  }
+
+  function startParticles(){
+    particleEnabled = true; localStorage.setItem('ut_particles','true'); settings.particles = true;
+    if(!raf) drawParticles();
+  }
+  function stopParticles(){
+    particleEnabled = false; localStorage.setItem('ut_particles','false'); settings.particles = false;
+    if(raf) { cancelAnimationFrame(raf); raf = null; ctx && ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  if(settings.particles) drawParticles();
+
+  // Toggle handlers
+  themeBtn?.addEventListener('click', ()=> applyTheme(root.classList.contains('light') ? 'dark' : 'light'));
+  themeLightBtn?.addEventListener('click', ()=> applyTheme('light'));
+  themeDarkBtn?.addEventListener('click', ()=> applyTheme('dark'));
+
+  fontSizeSelect?.addEventListener('change', e => applyFontSize(e.target.value));
+  fontSizePanel?.addEventListener('change', e => applyFontSize(e.target.value));
+
+  particlesBtn?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    if(particlesBtn) particlesBtn.classList.toggle('active', particleEnabled);
+  });
+  particlesPanelToggle?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    particlesPanelToggle.classList.toggle('active', particleEnabled);
+  });
+
+  reducedMotionToggle?.addEventListener('click', ()=> {
+    settings.reducedMotion = !settings.reducedMotion;
+    applyReducedMotion(settings.reducedMotion);
+  });
+
+  function applyReducedMotion(on){
+    if(on) root.classList.add('reduced-motion'); else root.classList.remove('reduced-motion');
+    localStorage.setItem('ut_reduced', on ? 'true' : 'false');
+  }
+
+  // Tabs logic (settings)
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', ()=> {
+      tabButtons.forEach(b => b.classList.toggle('active', b === btn));
+      const target = btn.dataset.tab;
+      tabPanes.forEach(p => p.classList.toggle('hidden', p.dataset.pane !== target));
+    });
+  });
+
+  // Modals: open only by buttons (not visible by default)
+  function openModal(modal){
+    if(!modal) return;
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    const f = modal.querySelector('input,button,select,textarea');
+    if(f) setTimeout(()=> f.focus(), 120);
+  }
+  function closeModal(modal){
+    if(!modal) return;
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+
+  // Wire buttons
+  settingsBtn?.addEventListener('click', ()=> openModal(settingsModal));
+  settingsClose?.addEventListener('click', ()=> closeModal(settingsModal));
+  doc.querySelectorAll('[data-close="true"]').forEach(el => el.addEventListener('click', ()=> { closeModal(settingsModal); closeModal(authModal); }));
+
+  // Close on escape
+  window.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
+      closeModal(settingsModal);
+    }
+  });
+
+
+
+  // Export / Import
+  exportBtn?.addEventListener('click', ()=> {
+    const toExport = {
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    };
+    const blob = new Blob([JSON.stringify(toExport, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = doc.createElement('a'); a.href = url; a.download = 'ut_settings.json'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  importBtn?.addEventListener('click', ()=> {
+    try {
+      const data = JSON.parse(importArea.value);
+      if(!data) throw new Error('Пустой JSON');
+      if(data.theme) applyTheme(data.theme);
+      if(data.fontSize) applyFontSize(data.fontSize);
+      if(typeof data.particles !== 'undefined'){ data.particles ? startParticles() : stopParticles(); }
+      if(typeof data.sounds !== 'undefined'){ settings.sounds = !!data.sounds; localStorage.setItem('ut_sounds', settings.sounds ? 'true' : 'false'); }
+      if(typeof data.reducedMotion !== 'undefined'){ applyReducedMotion(!!data.reducedMotion); }
+      if(data.uiDensity) applyDensity(data.uiDensity);
+      if(data.account) { settings.account = data.account; localStorage.setItem('ut_account', JSON.stringify(data.account)); accName.value = data.account.name || ''; accEmail.value = data.account.email || ''; }
+      if(data.security){ settings.security = data.security; localStorage.setItem('ut_2fa', data.security.twoFA ? 'true':'false'); twoFAToggle.checked = !!data.security.twoFA; }
+      if(data.notify){ settings.notify = data.notify; localStorage.setItem('ut_push', data.notify.push ? 'true':'false'); pushToggle.checked = !!data.notify.push; }
+      alert('Настройки импортированы и применены.');
+    } catch(err){
+      alert('Ошибка импорта: ' + err.message);
+    }
+  });
+
+
+
+  // Fill UI from settings on load
+  function hydrateUI(){
+    if(fontSizeSelect) fontSizeSelect.value = settings.fontSize;
+    if(fontSizePanel) fontSizePanel.value = settings.fontSize;
+    if(particlesBtn) particlesBtn.classList.toggle('active', settings.particles);
+    if(soundsBtn) soundsBtn.classList.toggle('active', settings.sounds);
+    if(particlesPanelToggle) particlesPanelToggle.classList.toggle('active', settings.particles);
+    if(twoFAToggle) twoFAToggle.checked = settings.security.twoFA;
+    if(sessionLockToggle) sessionLockToggle.checked = settings.security.sessionLock;
+    if(pushToggle) pushToggle.checked = settings.notify && settings.notify.push;
+    if(mailToggle) mailToggle.checked = settings.notify && settings.notify.mail;
+    if(settings.account){ accName.value = settings.account.name || ''; accEmail.value = settings.account.email || ''; }
+  }
+  hydrateUI();
+
+  // Ensure modals are hidden initially
+  closeModal(settingsModal);
+  closeModal(authModal);
+
+  // micro-interaction: press animation
+  doc.addEventListener('pointerdown', e => {
+    const el = e.target.closest('button, a');
+    if(!el) return;
+    el.animate([{ transform: 'scale(.995)' }, { transform: 'scale(1)' }], { duration: 140, easing: 'cubic-bezier(.2,.9,.2,1)' });
+  });
+
+  // convenience: save settings on unload
+  window.addEventListener('beforeunload', ()=> {
+    localStorage.setItem('ut_settings_snapshot', JSON.stringify({
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    }));
+  });
+
+})();
+  </script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1176 @@
+<!doctype html>
+<html lang="ru" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Таймер — Ultimate Toolkit</title>
+
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+/* ===============================
+   ULTIMATE TOOLKIT — FOOTER
+   =============================== */
+
+.ut-footer {
+  margin-top: 203px;
+  padding: 28px 0;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+.ut-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+/* BRAND */
+
+.ut-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ut-footer-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #7c5cff, #06b6d4);
+  box-shadow:
+    0 10px 28px rgba(124,92,255,0.45);
+}
+
+.ut-footer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ut-footer-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ut-footer-copy {
+  font-size: 12.5px;
+  opacity: .6;
+}
+
+/* LINKS */
+
+.ut-footer-links {
+  display: flex;
+  gap: 22px;
+}
+
+.ut-footer-links a {
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: .75;
+  color: var(--text-main);
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
+
+}
+
+.ut-footer-links a:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+
+
+
+/* === SOUND BUTTON SAME SIZE AS OTHERS === */
+
+.sound-select-wrap{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
+}
+
+/* =============================== TIMER — PREMIUM (MATCH STOPWATCH) =============================== */
+
+.time-layout{
+  display:grid;
+  grid-template-columns:86px 1fr;
+  gap:32px;
+  max-width:1280px;
+  margin:36px auto;
+  padding:0 20px;
+}
+
+/* LEFT NAV */
+.time-nav{
+  position:sticky;
+  top:120px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.time-nav a{
+  height:72px;
+  border-radius:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);
+  border:1px solid rgba(255,255,255,.05);
+  transition:.35s;
+}
+.time-nav a.active{
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);
+  color:white;
+  box-shadow:0 0 42px rgba(99,102,241,.45);
+}
+
+/* MAIN PANEL */
+.timer-panel{
+  padding:42px;
+  border-radius:28px;
+  text-align:center;
+}
+
+/* TITLE */
+.timer-title{
+  font-size:52px;
+  font-weight:900;
+}
+
+/* HINT */
+.timer-hint{
+  margin-top:8px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+/* LABELS */
+.timer-labels{
+  display:flex;
+  justify-content:center;
+  gap:120px;
+  margin-top:32px;
+  font-weight:700;
+  color:var(--muted);
+}
+
+/* PICKER */
+.timer-picker{
+  display:flex;
+  justify-content:center;
+  gap:32px;
+  margin:12px 0 34px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-unit{
+  width:160px;
+  padding:26px 0;
+  font-size:72px;
+  font-weight:900;
+  border-radius:24px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  cursor:ns-resize;
+  user-select:none;
+  transition:.35s;
+  letter-spacing:3px;
+}
+.time-unit:hover{
+  background:rgba(255,255,255,.1);
+  transform:translateY(-6px);
+}
+
+/* CONTROLS */
+.timer-controls{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-top:20px;
+}
+
+.timer-btn{
+  position:relative;
+  padding:18px 0;
+  border-radius:18px;
+  font-size:18px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);
+  box-shadow:0 12px 36px rgba(0,0,0,.35);
+  transition:.35s;
+  cursor:pointer;
+}
+.timer-btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 52px rgba(0,0,0,.55);
+}
+
+.timer-btn.start{background:linear-gradient(135deg,#22c55e,#4ade80);color:#022c22;}
+.timer-btn.pause{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#3b2500;}
+.timer-btn.reset{background:linear-gradient(135deg,#ef4444,#f87171);color:#450a0a;}
+.timer-btn.sound{background:linear-gradient(135deg,#8b5cf6,#06b6d4);color:white;}
+
+/* SOUND DROPDOWN */
+.sound-panel{
+  position:absolute;
+  bottom:-10px;
+  left:0;
+  right:0;
+  transform:translateY(100%) scale(.96);
+  opacity:0;
+  pointer-events:none;
+  transition:.35s cubic-bezier(.2,.8,.2,1);
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(18px);
+  border-radius:18px;
+  padding:12px;
+  display:grid;
+  gap:8px;
+  z-index:20;
+}
+.sound-panel.active{
+  opacity:1;
+  transform:translateY(100%) scale(1);
+  pointer-events:auto;
+}
+.sound-panel button{
+  padding:15px;
+  border-radius:12px;
+  background:rgba(255,255,255,.1);
+  font-weight:700;
+  transition:.25s;
+}
+.sound-panel button:hover{
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);
+  color:white;
+}
+/* ================= SOUND SELECT — PREMIUM LIST ================= */
+
+.sound-select-wrap{
+  position:relative;
+}
+
+.sound-list{
+  position:absolute;
+  top:calc(100% + 12px);
+  left:0;
+  right:0;
+  background:rgba(15,15,25,.85);
+  backdrop-filter:blur(20px);
+  border-radius:18px;
+  padding:10px;
+  display:grid;
+  gap:6px;
+
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 24px 60px rgba(0,0,0,.6);
+
+  opacity:0;
+  transform:translateY(-10px) scale(.96);
+  pointer-events:none;
+  transition:
+    opacity .35s ease,
+    transform .4s cubic-bezier(.2,.8,.2,1);
+  z-index:30;
+}
+
+.sound-list {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  background: rgba(15, 15, 25, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 18px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(-10px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 30;
+}
+
+.sound-list.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.sound-list button {
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.25s;
+}
+
+.sound-list button:hover {
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  color: white;
+  border-color: transparent;
+  transform: translateX(4px);
+  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.4);
+}
+.sound-list{
+  max-height: 180px; /* 3 кнопки */
+  overflow-y: auto;
+}
+
+/* красивый скролл */
+.sound-list::-webkit-scrollbar{
+  width: 6px;
+}
+.sound-list::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,.25);
+  border-radius: 6px;
+}
+.sound-list::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+
+</style>
+  <script>
+    fetch('/shared/logo.html')
+      .then(r => r.text())
+      .then(html => {
+        document.head.insertAdjacentHTML('beforeend', html);
+      });
+  </script>
+</head>
+
+<body>
+
+<div id="noise"></div>
+<div class="gradient-animated"></div>
+<canvas id="particle-canvas"></canvas>
+
+<!-- HEADER (1:1) -->
+<header class="header">
+  <div class="header-inner container">
+    <div class="brand">
+      <div class="logo">UT</div>
+      <div>
+        <div class="site-title">Ultimate Toolkit</div>
+        <div class="site-sub">Часы · Никнеймы · Пароли · Рандомайзер · Колесо · Даты</div>
+      </div>
+    </div>
+
+    <nav class="nav-pills">
+        <a href="index.html">Главная</a>
+        <a href="timer.html" class="active">Часы</a>
+      <a href="nick.html">Никнеймы</a>
+      <a href="password.html">Пароли</a>
+      <a href="random.html">Рандомайзер</a>
+      <a href="wheel.html">Колесо фортуны</a>
+      <a href="countdown.html">Отчёт до даты</a>
+    </nav>
+
+    <div class="header-actions">
+      <button id="themeBtn" class="icon-btn">🌙</button>
+      <button id="settingsBtn" class="icon-btn">⚙️</button>
+    </div>
+  </div>
+</header>
+
+<main class="time-layout">
+
+<nav class="time-nav">
+  <a href="timer.html">⏲<small>Часы</small></a>
+  <a href="clock-live.html">🕗<small>Текущее</small></a>
+  <a class="active"href="stopwatch.html">⏲️<small>Таймер</small></a>
+  <a href="taimer.html">⏱️<small>Секундомер</small></a>
+  <a href="countdown.html">⌛<small>Даты</small></a>
+</nav>
+<section class="timer-panel card-glass">
+
+<h2 class="timer-title">Таймер</h2>
+<div class="timer-hint">Установите время прокруткой колеса мыши</div>
+<div class="timer-hint">Чтобы остановить звуки после окончания таймера, нажмите на "Пауза"</div>
+
+<div class="timer-labels">
+  <div>Часы</div><div>Минуты</div><div>Секунды</div>
+</div>
+
+<div class="timer-picker">
+  <div id="h" class="time-unit">00</div>
+  <div id="m" class="time-unit">05</div>
+  <div id="s" class="time-unit">00</div>
+</div>
+
+<div class="timer-controls">
+  <button class="timer-btn start">▶ Старт</button>
+  <button class="timer-btn pause">⏸ Пауза</button>
+  <button class="timer-btn reset">⟲ Сброс</button>
+<button class="timer-btn sound" id="soundBtn">
+    <span id="currentSound">🔔Звук 1 </span>
+  </button>
+
+<div class="sound-list" id="soundList">
+  <button data-s="alarm1.mp3">🔔Звук 1</button>
+  <button data-s="alarm2.mp3">⏰Звук 2</button>
+  <button data-s="digital.mp3">📟Digital</button>
+  <button data-s="bell.mp3">🔕Bell</button>
+</div>
+
+
+</section>
+</main>
+<footer class="ut-footer">
+  <div class="ut-footer-inner container">
+
+    <!-- LEFT: BRAND -->
+    <div class="ut-footer-brand">
+      <div class="ut-footer-logo">UT</div>
+      <div class="ut-footer-text">
+        <div class="ut-footer-title">Ultimate Toolkit</div>
+        <div class="ut-footer-copy">
+          © 2026<span id="footerYear"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: LINKS -->
+    <div class="ut-footer-links">
+      <a href="feedback.html">Обратная связь</a>
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+
+  </div>
+</footer>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-panel settings-panel card-glass" role="document" aria-labelledby="settingsTitle">
+      <button class="modal-close" id="settingsClose" aria-label="Закрыть">✖</button>
+      <h3 id="settingsTitle">Настройки</h3>
+
+      <div class="tabs" style="display:flex;gap:8px;margin-top:12px">
+        <button class="tab" data-tab="personal">Персонализация</button>
+        <button class="tab" data-tab="export">Экспорт</button>
+      </div>
+
+      <div class="tab-content" style="margin-top:12px">
+
+
+        <!-- PERSONAL -->
+        <div class="tab-pane hidden" data-pane="personal">
+          <h4>Персонализация интерфейса</h4>
+          <div class="section">
+            <label>Тема</label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="themeLight" class="btn-toggle">Светлая</button>
+              <button id="themeDark" class="btn-toggle">Тёмная</button>
+            </div>
+
+            <label style="margin-top:12px">Размер UI</label>
+            <select id="fontSizePanel" class="form-select" style="margin-top:8px">
+              <option value="15">15px</option>
+              <option value="16" selected>16px</option>
+              <option value="18">18px</option>
+              <option value="20">20px</option>
+            </select>
+
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button id="particlesPanelToggle" class="btn-toggle">Частицы</button>
+              <button id="reducedMotionToggle" class="btn-toggle">Reduced motion</button>
+            </div>
+
+            <label style="margin-top:12px">UI плотность</label>
+            <select id="uiDensity" class="form-select">
+              <option value="compact">Компакт</option>
+              <option value="normal" selected>Обычная</option>
+              <option value="comfortable">Комфорт</option>
+            </select>
+          </div>
+        </div>
+
+
+        <!-- EXPORT / IMPORT -->
+        <div class="tab-pane hidden" data-pane="export">
+          <h4>Экспорт / Импорт настроек</h4>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="exportBtn" class="btn-primary" style="flex:1">Экспорт в JSON</button>
+            <button id="importBtn" class="btn-ghost" style="flex:1">Импорт (вставить JSON)</button>
+          </div>
+          <textarea id="importArea" placeholder='Вставь JSON и нажми "Импорт"' style="width:100%;height:120px;margin-top:10px;padding:10px;border-radius:8px;background:transparent;border:1px solid var(--border);color:inherit"></textarea>
+          <div class="small-muted" style="margin-top:8px">Экспортирует все настройки, импорт применит и сохранит локально.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* =========================
+     STATE
+  ========================= */
+  const state = {
+    theme: localStorage.getItem('theme') || 'dark',
+    particlesEnabled: JSON.parse(localStorage.getItem('particlesEnabled') ?? 'true'),
+    particleType: localStorage.getItem('particleType') || 'soft',
+    fontSize: localStorage.getItem('fontSize') || '16',
+    density: localStorage.getItem('uiDensity') || 'normal',
+    reducedMotion: JSON.parse(localStorage.getItem('reducedMotion') ?? 'false'),
+    glass: JSON.parse(localStorage.getItem('glass') ?? 'true')
+  };
+
+  /* =========================
+     ELEMENTS
+  ========================= */
+  const html = document.documentElement;
+  const modal = document.getElementById('settingsModal');
+  const openBtn = document.getElementById('settingsBtn');
+  const closeBtn = document.getElementById('settingsClose');
+  const backdrop = modal.querySelector('.modal-backdrop');
+
+  const themeLight = document.getElementById('themeLight');
+  const themeDark = document.getElementById('themeDark');
+
+  const fontSizePanel = document.getElementById('fontSizePanel');
+  const densitySelect = document.getElementById('uiDensity');
+  const particleSelect = document.getElementById('particleType');
+  const particlesToggle = document.getElementById('particlesPanelToggle');
+  const reducedMotionToggle = document.getElementById('reducedMotionToggle');
+  const glassToggle = document.getElementById('glassMorphismToggle');
+  const resetBtn = document.getElementById('resetPersonalization');
+
+  /* =========================
+     MODAL
+  ========================= */
+  const openModal = () => {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    activateTab('personal');
+  };
+
+  const closeModal = () => {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  };
+
+  openBtn?.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => e.key === 'Escape' && closeModal());
+
+  /* =========================
+     TABS
+  ========================= */
+  const tabs = modal.querySelectorAll('.tab');
+  const panes = modal.querySelectorAll('.tab-pane');
+
+  function activateTab(name) {
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    panes.forEach(p => p.classList.toggle('hidden', p.dataset.pane !== name));
+  }
+
+  tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab.dataset.tab)));
+
+  /* =========================
+     THEME
+  ========================= */
+  function applyTheme(theme) {
+    html.dataset.theme = theme;
+    themeLight.classList.toggle('active', theme === 'light');
+    themeDark.classList.toggle('active', theme === 'dark');
+    localStorage.setItem('theme', theme);
+  }
+
+  themeLight.onclick = () => applyTheme('light');
+  themeDark.onclick = () => applyTheme('dark');
+  applyTheme(state.theme);
+
+  /* =========================
+     UI SETTINGS
+  ========================= */
+  fontSizePanel.value = state.fontSize;
+  fontSizePanel.onchange = () => {
+    html.style.fontSize = fontSizePanel.value + 'px';
+    localStorage.setItem('fontSize', fontSizePanel.value);
+  };
+  html.style.fontSize = state.fontSize + 'px';
+
+  densitySelect.value = state.density;
+  densitySelect.onchange = () => {
+    html.dataset.density = densitySelect.value;
+    localStorage.setItem('uiDensity', densitySelect.value);
+  };
+  html.dataset.density = state.density;
+
+  reducedMotionToggle.checked = state.reducedMotion;
+  reducedMotionToggle.onchange = () => {
+    html.classList.toggle('reduced-motion', reducedMotionToggle.checked);
+    localStorage.setItem('reducedMotion', reducedMotionToggle.checked);
+  };
+
+  glassToggle.checked = state.glass;
+  glassToggle.onchange = () => {
+    html.classList.toggle('no-glass', !glassToggle.checked);
+    localStorage.setItem('glass', glassToggle.checked);
+  };
+
+  /* =========================
+     PARTICLES ENGINE
+  ========================= */
+  const canvas = document.getElementById('bgParticles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function createParticles(type) {
+    particles = [];
+    const count = 120;
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 0.5,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        o: Math.random()
+      });
+    }
+  }
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!state.particlesEnabled) return;
+
+    particles.forEach(p => {
+      ctx.beginPath();
+
+      if (state.particleType === 'matrix') {
+        ctx.fillStyle = `rgba(0,255,100,${p.o})`;
+        ctx.fillRect(p.x, p.y, 2, 8);
+        p.y += 1.5;
+        if (p.y > canvas.height) p.y = 0;
+        return;
+      }
+
+      ctx.fillStyle = `rgba(255,255,255,${p.o})`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    });
+
+    requestAnimationFrame(drawParticles);
+  }
+
+  particleSelect.value = state.particleType;
+  particleSelect.onchange = () => {
+    state.particleType = particleSelect.value;
+    localStorage.setItem('particleType', state.particleType);
+    createParticles(state.particleType);
+  };
+
+  particlesToggle.checked = state.particlesEnabled;
+  particlesToggle.onchange = () => {
+    state.particlesEnabled = particlesToggle.checked;
+    localStorage.setItem('particlesEnabled', state.particlesEnabled);
+  };
+
+  createParticles(state.particleType);
+  drawParticles();
+
+  /* =========================
+     RESET
+  ========================= */
+  resetBtn.onclick = () => {
+    localStorage.clear();
+    location.reload();
+  };
+
+  /* =========================
+     INIT
+  ========================= */
+  closeModal();
+});
+
+</script>
+
+<script>
+(() => {
+  const hEl = document.getElementById('h');
+  const mEl = document.getElementById('m');
+  const sEl = document.getElementById('s');
+
+  const startBtn = document.querySelector('.timer-btn.start');
+  const pauseBtn = document.querySelector('.timer-btn.pause');
+  const resetBtn = document.querySelector('.timer-btn.reset');
+
+  const soundBtn = document.getElementById('soundBtn');
+  const soundList = document.getElementById('soundList');
+  const currentSoundEl = document.getElementById('currentSound');
+
+  let totalSeconds = 0;
+  let timer = null;
+let selectedSound = 'alarm1.mp3';
+
+
+  const audio = new Audio();
+let soundPlaying = false;
+
+  const pad = n => String(n).padStart(2, '0');
+
+  function updateDisplay() {
+    let t = totalSeconds;
+    hEl.textContent = pad(Math.floor(t / 3600));
+    mEl.textContent = pad(Math.floor((t % 3600) / 60));
+    sEl.textContent = pad(t % 60);
+  }
+
+  function readDisplay() {
+    totalSeconds =
+      Number(hEl.textContent) * 3600 +
+      Number(mEl.textContent) * 60 +
+      Number(sEl.textContent);
+  }
+
+  /* ===== wheel time control ===== */
+  function wheel(el, max) {
+    el.addEventListener('wheel', e => {
+      e.preventDefault();
+      let v = Number(el.textContent);
+      v += e.deltaY < 0 ? 1 : -1;
+      if (v < 0) v = max;
+      if (v > max) v = 0;
+      el.textContent = pad(v);
+      readDisplay();
+    });
+  }
+
+  wheel(hEl, 99);
+  wheel(mEl, 59);
+  wheel(sEl, 59);
+
+  /* ===== timer ===== */
+  startBtn.onclick = () => {
+    if (timer) return;
+    if (totalSeconds <= 0) return;
+
+    timer = setInterval(() => {
+      totalSeconds--;
+      updateDisplay();
+
+      if (totalSeconds <= 0) {
+        clearInterval(timer);
+        timer = null;
+audio.src = 'sounds/' + selectedSound;
+audio.currentTime = 0;
+audio.play();
+soundPlaying = true;
+
+      }
+    }, 1000);
+  };
+
+pauseBtn.onclick = () => {
+  // если идет таймер — пауза таймера
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+  }
+audio.onended = () => {
+  soundPlaying = false;
+};
+
+  // если играет звук — остановить звук
+  if (soundPlaying) {
+    audio.pause();
+    audio.currentTime = 0;
+    soundPlaying = false;
+  }
+};
+
+
+  resetBtn.onclick = () => {
+    clearInterval(timer);
+    timer = null;
+    totalSeconds = 0;
+    updateDisplay();
+  };
+
+  /* ===== sound selector ===== */
+  soundBtn.onclick = () => {
+    soundList.classList.toggle('active');
+  };
+
+  soundList.querySelectorAll('button').forEach(btn => {
+    btn.onclick = () => {
+      selectedSound = btn.dataset.s;
+      currentSoundEl.textContent = btn.textContent;
+      soundList.classList.remove('active');
+    };
+  });
+
+})();
+</script>
+
+
+ <script>
+(function () {
+  'use strict';
+  const doc = document;
+  const root = doc.documentElement;
+
+  // Elements
+  const themeBtn = doc.getElementById('themeBtn');
+  const settingsBtn = doc.getElementById('settingsBtn');
+
+  const settingsModal = doc.getElementById('settingsModal');
+  const settingsClose = doc.getElementById('settingsClose');
+
+  const yearEl = doc.getElementById('year');
+
+  // Controls inside settings
+  const tabButtons = Array.from(doc.querySelectorAll('.tab'));
+  const tabPanes = Array.from(doc.querySelectorAll('.tab-pane'));
+
+  // quick controls
+  const fontSizeSelect = doc.getElementById('fontSize');
+  const particlesBtn = doc.getElementById('toggleParticles');
+  const soundsBtn = doc.getElementById('toggleSounds');
+
+  // panel controls
+  const themeLightBtn = doc.getElementById('themeLight');
+  const themeDarkBtn = doc.getElementById('themeDark');
+  const fontSizePanel = doc.getElementById('fontSizePanel');
+  const particlesPanelToggle = doc.getElementById('particlesPanelToggle');
+  const reducedMotionToggle = doc.getElementById('reducedMotionToggle');
+  const saveAccountBtn = doc.getElementById('saveAccount');
+  const resetAccountBtn = doc.getElementById('resetAccount');
+  const accName = doc.getElementById('accName');
+  const accEmail = doc.getElementById('accEmail');
+
+  const exportBtn = doc.getElementById('exportBtn');
+  const importBtn = doc.getElementById('importBtn');
+  const importArea = doc.getElementById('importArea');
+
+
+
+  // Particles canvas
+  const canvas = doc.getElementById('particle-canvas');
+  const ctx = canvas && canvas.getContext ? canvas.getContext('2d') : null;
+  let particles = [];
+  let particleEnabled = localStorage.getItem('ut_particles') !== 'false';
+  let raf = null;
+
+  // Year
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Helpers: save/load settings
+  function getDefaultSettings(){
+    return {
+      theme: localStorage.getItem('ut_theme') || 'dark',
+      fontSize: localStorage.getItem('ut_font') || '16',
+      particles: localStorage.getItem('ut_particles') !== 'false',
+      sounds: localStorage.getItem('ut_sounds') === 'true',
+      reducedMotion: localStorage.getItem('ut_reduced') === 'true',
+      uiDensity: localStorage.getItem('ut_density') || 'normal',
+      account: JSON.parse(localStorage.getItem('ut_account') || '{}'),
+      security: {
+        twoFA: localStorage.getItem('ut_2fa') === 'true',
+        sessionLock: localStorage.getItem('ut_lock') === 'true'
+      },
+      notify: {
+        push: localStorage.getItem('ut_push') === 'true',
+        mail: localStorage.getItem('ut_mail') === 'true'
+      }
+    };
+  }
+  let settings = getDefaultSettings();
+
+  // Apply theme
+  function applyTheme(theme){
+    if(theme === 'light') root.classList.add('light');
+    else root.classList.remove('light');
+    localStorage.setItem('ut_theme', theme);
+    if(themeBtn) themeBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    settings.theme = theme;
+  }
+  applyTheme(settings.theme);
+
+  // Apply font size
+  function applyFontSize(px){
+    root.style.setProperty('--font-size-base', px + 'px');
+    localStorage.setItem('ut_font', px);
+    if (fontSizeSelect) fontSizeSelect.value = px;
+    if (fontSizePanel) fontSizePanel.value = px;
+    settings.fontSize = px;
+  }
+  applyFontSize(settings.fontSize);
+
+  // Reduced motion
+  function applyReducedMotion(on){
+    if(on) root.classList.add('reduced-motion'); else root.classList.remove('reduced-motion');
+    localStorage.setItem('ut_reduced', on ? 'true' : 'false');
+    settings.reducedMotion = on;
+  }
+  applyReducedMotion(settings.reducedMotion);
+
+  // UI density
+  function applyDensity(value){
+    document.body.dataset.density = value;
+    localStorage.setItem('ut_density', value);
+    settings.uiDensity = value;
+  }
+  applyDensity(localStorage.getItem('ut_density') || 'normal');
+
+  // Particles implementation
+  function resizeCanvas(){
+    if(!canvas || !ctx) return;
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(innerWidth * dpr);
+    canvas.height = Math.floor(innerHeight * dpr);
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function createParticles(count = 88){
+    particles = [];
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        r: 0.6 + Math.random()*4.4,
+        vx: (Math.random()-0.5)*0.6,
+        vy: (Math.random()-0.5)*0.6,
+        hue: 170 + Math.random()*150,
+        a: 0.03 + Math.random()*0.08
+      });
+    }
+  }
+  createParticles(88);
+
+  function drawParticles(){
+    if(!canvas || !ctx) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(!particleEnabled) return;
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -40) p.x = innerWidth + 40; if(p.x > innerWidth + 40) p.x = -40;
+      if(p.y < -40) p.y = innerHeight + 40; if(p.y > innerHeight + 40) p.y = -40;
+      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*8);
+      g.addColorStop(0, `hsla(${p.hue},85%,64%,${p.a})`);
+      g.addColorStop(0.6, `hsla(${p.hue},70%,50%,${p.a*0.4})`);
+      g.addColorStop(1, `hsla(${p.hue},60%,40%,0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r*8,0,Math.PI*2);
+      ctx.fill();
+    }
+    raf = requestAnimationFrame(drawParticles);
+  }
+
+  function startParticles(){
+    particleEnabled = true; localStorage.setItem('ut_particles','true'); settings.particles = true;
+    if(!raf) drawParticles();
+  }
+  function stopParticles(){
+    particleEnabled = false; localStorage.setItem('ut_particles','false'); settings.particles = false;
+    if(raf) { cancelAnimationFrame(raf); raf = null; ctx && ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  if(settings.particles) drawParticles();
+
+  // Toggle handlers
+  themeBtn?.addEventListener('click', ()=> applyTheme(root.classList.contains('light') ? 'dark' : 'light'));
+  themeLightBtn?.addEventListener('click', ()=> applyTheme('light'));
+  themeDarkBtn?.addEventListener('click', ()=> applyTheme('dark'));
+
+  fontSizeSelect?.addEventListener('change', e => applyFontSize(e.target.value));
+  fontSizePanel?.addEventListener('change', e => applyFontSize(e.target.value));
+
+  particlesBtn?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    if(particlesBtn) particlesBtn.classList.toggle('active', particleEnabled);
+  });
+  particlesPanelToggle?.addEventListener('click', ()=> {
+    particleEnabled = !particleEnabled;
+    if(particleEnabled) startParticles(); else stopParticles();
+    particlesPanelToggle.classList.toggle('active', particleEnabled);
+  });
+
+  reducedMotionToggle?.addEventListener('click', ()=> {
+    settings.reducedMotion = !settings.reducedMotion;
+    applyReducedMotion(settings.reducedMotion);
+  });
+
+  function applyReducedMotion(on){
+    if(on) root.classList.add('reduced-motion'); else root.classList.remove('reduced-motion');
+    localStorage.setItem('ut_reduced', on ? 'true' : 'false');
+  }
+
+  // Tabs logic (settings)
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', ()=> {
+      tabButtons.forEach(b => b.classList.toggle('active', b === btn));
+      const target = btn.dataset.tab;
+      tabPanes.forEach(p => p.classList.toggle('hidden', p.dataset.pane !== target));
+    });
+  });
+
+  // Modals: open only by buttons (not visible by default)
+  function openModal(modal){
+    if(!modal) return;
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    const f = modal.querySelector('input,button,select,textarea');
+    if(f) setTimeout(()=> f.focus(), 120);
+  }
+  function closeModal(modal){
+    if(!modal) return;
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+
+  // Wire buttons
+  settingsBtn?.addEventListener('click', ()=> openModal(settingsModal));
+  settingsClose?.addEventListener('click', ()=> closeModal(settingsModal));
+  doc.querySelectorAll('[data-close="true"]').forEach(el => el.addEventListener('click', ()=> { closeModal(settingsModal); closeModal(authModal); }));
+
+  // Close on escape
+  window.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
+      closeModal(settingsModal);
+    }
+  });
+
+
+
+  // Export / Import
+  exportBtn?.addEventListener('click', ()=> {
+    const toExport = {
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    };
+    const blob = new Blob([JSON.stringify(toExport, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = doc.createElement('a'); a.href = url; a.download = 'ut_settings.json'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  importBtn?.addEventListener('click', ()=> {
+    try {
+      const data = JSON.parse(importArea.value);
+      if(!data) throw new Error('Пустой JSON');
+      if(data.theme) applyTheme(data.theme);
+      if(data.fontSize) applyFontSize(data.fontSize);
+      if(typeof data.particles !== 'undefined'){ data.particles ? startParticles() : stopParticles(); }
+      if(typeof data.sounds !== 'undefined'){ settings.sounds = !!data.sounds; localStorage.setItem('ut_sounds', settings.sounds ? 'true' : 'false'); }
+      if(typeof data.reducedMotion !== 'undefined'){ applyReducedMotion(!!data.reducedMotion); }
+      if(data.uiDensity) applyDensity(data.uiDensity);
+      if(data.account) { settings.account = data.account; localStorage.setItem('ut_account', JSON.stringify(data.account)); accName.value = data.account.name || ''; accEmail.value = data.account.email || ''; }
+      if(data.security){ settings.security = data.security; localStorage.setItem('ut_2fa', data.security.twoFA ? 'true':'false'); twoFAToggle.checked = !!data.security.twoFA; }
+      if(data.notify){ settings.notify = data.notify; localStorage.setItem('ut_push', data.notify.push ? 'true':'false'); pushToggle.checked = !!data.notify.push; }
+      alert('Настройки импортированы и применены.');
+    } catch(err){
+      alert('Ошибка импорта: ' + err.message);
+    }
+  });
+
+
+
+  // Fill UI from settings on load
+  function hydrateUI(){
+    if(fontSizeSelect) fontSizeSelect.value = settings.fontSize;
+    if(fontSizePanel) fontSizePanel.value = settings.fontSize;
+    if(particlesBtn) particlesBtn.classList.toggle('active', settings.particles);
+    if(soundsBtn) soundsBtn.classList.toggle('active', settings.sounds);
+    if(particlesPanelToggle) particlesPanelToggle.classList.toggle('active', settings.particles);
+    if(twoFAToggle) twoFAToggle.checked = settings.security.twoFA;
+    if(sessionLockToggle) sessionLockToggle.checked = settings.security.sessionLock;
+    if(pushToggle) pushToggle.checked = settings.notify && settings.notify.push;
+    if(mailToggle) mailToggle.checked = settings.notify && settings.notify.mail;
+    if(settings.account){ accName.value = settings.account.name || ''; accEmail.value = settings.account.email || ''; }
+  }
+  hydrateUI();
+
+  // Ensure modals are hidden initially
+  closeModal(settingsModal);
+  closeModal(authModal);
+
+  // micro-interaction: press animation
+  doc.addEventListener('pointerdown', e => {
+    const el = e.target.closest('button, a');
+    if(!el) return;
+    el.animate([{ transform: 'scale(.995)' }, { transform: 'scale(1)' }], { duration: 140, easing: 'cubic-bezier(.2,.9,.2,1)' });
+  });
+
+  // convenience: save settings on unload
+  window.addEventListener('beforeunload', ()=> {
+    localStorage.setItem('ut_settings_snapshot', JSON.stringify({
+      theme: settings.theme,
+      fontSize: settings.fontSize,
+      particles: settings.particles,
+      sounds: settings.sounds,
+      reducedMotion: settings.reducedMotion,
+      uiDensity: settings.uiDensity,
+      account: settings.account,
+      security: settings.security,
+      notify: settings.notify
+    }));
+  });
+
+})();
+  </script>
+
+
+
+</body>
+</html>
