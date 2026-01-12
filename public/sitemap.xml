@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Главная -->
+  <url>
+    <loc>https://ultimatetoolkit.ru/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Инструменты -->
+  <url><loc>https://ultimatetoolkit.ru/clock-live.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/stopwatch.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/taimer.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/timer.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/nick.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/password.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/random.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/wheel.html</loc></url>
+
+  <!-- Countdown варианты -->
+  <url><loc>https://ultimatetoolkit.ru/countdown0.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown1.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown2.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown3.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown4.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown5.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown6.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown7.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown8.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown9.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown10.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown11.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown12.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown13.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown14.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown15.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown16.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown17.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown18.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown19.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown20.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown21.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown22.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown23.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown24.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown25.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown26.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown27.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown28.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown29.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown30.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown31.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown32.html</loc></url>
+
+  <!-- Информационные страницы -->
+  <url><loc>https://ultimatetoolkit.ru/feedback.html</loc></url>
+  <url><loc>https://ultimatetoolkit.ru/privacy.html</loc></url>
+
+</urlset>
