@@ -1,0 +1,106 @@
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Главная страница -->
+  <url>
+    <loc>https://ultimatetoolkit.ru/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Раздел «Инструменты» (основные страницы) -->
+  <url>
+    <loc>https://ultimatetoolkit.ru/clock-live.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/countdown.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/stopwatch.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/taimer.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/timer.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/nick.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/password.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/random.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/wheel.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Варианты страниц Countdown -->
+  <url><loc>https://ultimatetoolkit.ru/countdown0.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown1.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown2.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown3.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown4.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown5.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown6.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown7.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown8.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown9.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown10.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown11.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown12.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown13.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown14.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown15.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown16.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown17.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown18.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown19.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown20.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown21.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown22.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown23.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown24.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown25.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown26.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown27.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown28.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown29.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown30.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown31.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ultimatetoolkit.ru/countdown32.html</loc><changefreq>daily</changefreq><priority>0.5</priority></url>
+
+  <!-- Информационные страницы -->
+  <url>
+    <loc>https://ultimatetoolkit.ru/feedback.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://ultimatetoolkit.ru/privacy.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
