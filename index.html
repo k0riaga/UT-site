@@ -46,7 +46,39 @@
   "url": "https://ultimatetoolkit.ru"
 }
 </script>
+ <script>
+    function setupFavicon() {
+      const link = document.createElement('link');
+      link.rel = 'icon';
+      
+      const candidates = [
+        { path: '/favicon.ico', type: 'image/vnd.microsoft.icon' },
+        { path: '/assets/logo/favicon.ico', type: 'image/vnd.microsoft.icon' },
+        { path: '/favicon.png', type: 'image/png' },
+        { path: '/assets/logo/favicon.png', type: 'image/png' }
+      ];
 
+      for (const candidate of candidates) {
+        const testImg = new Image();
+        testImg.onload = () => {
+          link.type = candidate.type;
+          link.href = candidate.path;
+          document.head.appendChild(link);
+          console.log('Favicon загружен:', candidate.path);
+          return;
+        };
+        testImg.onerror = () => {
+          console.debug('Favicon не найден:', candidate.path);
+        };
+        testImg.src = candidate.path;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', setupFavicon);
+    if (document.readyState === 'complete') {
+      setupFavicon();
+    }
+  </script>
   <style>
 /* ===== MODAL CORE FIX ===== */
 .modal {
