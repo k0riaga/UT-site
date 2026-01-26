@@ -38,3 +38,353 @@ document.addEventListener('DOMContentLoaded', setupFavicon);
 if (document.readyState === 'complete') {
   setupFavicon();
 }
+
+  /* ==================================================
+     1. GLOBAL CSS (ИНЖЕКТ ИЗ JS)
+     ================================================== */
+
+  const style = document.createElement("style");
+  style.innerHTML = `
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    /* ===== Layout ===== */
+    .ui-layout {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      min-height: 72px;
+      box-sizing: border-box;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    footer {
+      flex-shrink: 0;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      margin-top: auto;
+    }
+
+    /* ===== Navigation (UNIFIED) ===== */
+    header nav,
+    header .nav,
+    header .nav-pills {
+      display: flex !important;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      column-gap: 14px;
+      row-gap: 8px;
+      padding: 6px 0;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    header nav a,
+    header .nav a,
+    header .nav-pills a {
+      white-space: nowrap;
+    }
+
+    /* ===== Mobile ===== */
+    .nav-toggle {
+      display: none;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: inherit;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      header nav,
+      header .nav,
+      header .nav-pills {
+        display: none !important;
+        flex-direction: column;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      header nav.nav-open,
+      header .nav.nav-open,
+      header .nav-pills.nav-open {
+        display: flex !important;
+      }
+
+      .nav-toggle {
+        display: inline-block;
+        margin-right: 12px;
+      }
+    }
+
+    /* ===== Footer visual sync ===== */
+    footer {
+      background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.35) 100%
+      );
+      backdrop-filter: blur(6px);
+    }
+
+/* ===== Index ads ===== */
+/* Контейнер для карточек (необходим для абсолютного позиционирования) */
+.ads-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* скрывает возможные переполнения на мобильных */
+}
+
+/* Левая карточка — исходные параметры сохранены */
+#ad-card {
+  position: relative;
+  top: -78px;
+  left:-61.4%;
+  transform: translateX(-50%);
+  width: 732px;
+  height: 470px;
+  max-width: 90%;
+  border-radius: 22px;
+  padding: 22px;
+  border: 2px dashed rgba(139, 92, 246, 0.8);
+  background: linear-gradient(
+    rgba(139, 92, 246, 0.1),
+    rgba(6, 182, 212, 0.1)
+  );
+  backdrop-filter: blur(10px) saturate(160%);
+  box-shadow: 0 30px 80px rgba(2, 6, 23, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  z-index: 3;
+  transition: all 0.3s ease; /* плавный переход при адаптации */
+}
+
+/* Правая карточка — исходные параметры сохранены */
+#ad-card2 {
+  position: relative;
+  top: -114px;
+  left:-81.4%;
+  transform: translateX(-50%);
+  width: 432px;
+  height: 470px;
+  max-width: 90%;
+  border-radius: 22px;
+  padding: 22px;
+  border: 2px dashed rgba(139, 92, 246, 0.8);
+  background: linear-gradient(
+    rgba(139, 92, 246, 0.1),
+    rgba(6, 182, 212, 0.1)
+  );
+  backdrop-filter: blur(10px) saturate(160%);
+  box-shadow: 0 30px 80px rgba(2, 6, 23, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+/* Адаптация под мобильные устройства (ширина ≤ 768px) */
+@media (max-width: 768px) {
+  .ads-container {
+    display: flex;
+    flex-direction: column; /* карточки друг под другом */
+    gap: 20px; /* отступы между карточками */
+    position: static; /* отменяем относительное позиционирование */
+  }
+
+  #ad-card, #ad-card2 {
+    position: static; /* снимаем абсолютное позиционирование */
+    width: 90%; /* ширина относительно родителя */
+    margin: 0 auto; /* центрируем */
+    max-width: none; /* отменяем жёсткую ширину */
+    height: auto; /* высота по контенту */
+    min-height: 400px; /* минимальная высота для сохранения пропорций */
+    top: auto; /* сбрасываем top */
+    left: auto; /* сбрасываем left */
+    transform: none; /* убираем трансформации translateX */
+    backdrop-filter: none; /* отключаем фильтр на мобильных */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* упрощаем тень */
+    padding: 15px; /* уменьшаем внутренние отступы */
+    border-radius: 12px; /* уменьшаем радиус скругления */
+  }
+}
+
+/* Дополнительная адаптация для очень узких экранов (например, смартфоны) */
+@media (max-width: 480px) {
+  #ad-card, #ad-card2 {
+    width: 100%; /* на очень узких экранах — на всю ширину */
+    padding: 10px; /* ещё меньше отступов */
+    border-radius: 8px; /* ещё меньше скругление */
+    min-height: 350px; /* уменьшаем минимальную высоту */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* ещё более простая тень */
+  }
+}
+
+`;
+  document.head.appendChild(style);
+  /* ==================================================
+     2. LAYOUT WRAP (БЕЗ ЗАВИСИМОСТИ ОТ HTML)
+     ================================================== */
+
+  if (!document.querySelector(".ui-layout")) {
+    const layout = document.createElement("div");
+    layout.className = "ui-layout";
+
+    while (document.body.firstChild) {
+      layout.appendChild(document.body.firstChild);
+    }
+
+    document.body.appendChild(layout);
+  }
+
+/* ==================================================
+   3. HEADER — ЖЁСТКАЯ ДВУХСТРОЧНАЯ УНИФИКАЦИЯ
+   ================================================== */
+
+const header = document.querySelector("header");
+const nav =
+  header?.querySelector("nav") ||
+  header?.querySelector(".nav") ||
+  header?.querySelector(".nav-pills");
+
+if (header && nav) {
+  // собираем ВСЕ ссылки, независимо от структуры
+  const links = Array.from(nav.querySelectorAll("a"));
+
+  // ищем нужные пункты
+  const secondRowTexts = [
+    "колесо",
+    "отч"
+  ];
+
+  const firstRow = [];
+  const secondRow = [];
+
+  links.forEach(link => {
+    const text = link.textContent.toLowerCase();
+
+    if (secondRowTexts.some(t => text.includes(t))) {
+      secondRow.push(link);
+    } else {
+      firstRow.push(link);
+    }
+  });
+
+  // чистим nav ТОЛЬКО ВИЗУАЛЬНО
+  nav.innerHTML = "";
+
+  const row1 = document.createElement("div");
+  row1.style.display = "flex";
+  row1.style.flexWrap = "wrap";
+  row1.style.justifyContent = "center";
+  row1.style.gap = "14px";
+
+  firstRow.forEach(l => row1.appendChild(l));
+
+  const row2 = document.createElement("div");
+  row2.style.display = "flex";
+  row2.style.justifyContent = "center";
+  row2.style.gap = "14px";
+  row2.style.marginTop = "6px";
+
+  secondRow.forEach(l => row2.appendChild(l));
+
+  nav.append(row1, row2);
+}
+
+  /* ==================================================
+     4. MOBILE MENU (FALLBACK НА ЛЮБУЮ СТРУКТУРУ)
+     ================================================== */
+
+  if (header && !header.querySelector(".nav-toggle")) {
+    const nav =
+      header.querySelector("nav") ||
+      header.querySelector(".nav") ||
+      header.querySelector(".nav-pills");
+
+    if (nav) {
+      const toggle = document.createElement("button");
+      toggle.className = "nav-toggle";
+      toggle.textContent = "Меню";
+      header.insertBefore(toggle, nav);
+
+      toggle.addEventListener("click", () => {
+        nav.classList.toggle("nav-open");
+      });
+    }
+  }
+
+  /* ==================================================
+     5. FOOTER FIX (СТРОГО ПО ЛИНИИ)
+     ================================================== */
+
+  const footer = document.querySelector("footer");
+  if (footer) {
+    footer.style.flexShrink = "0";
+    footer.style.minHeight = "64px";
+    footer.style.display = "flex";
+    footer.style.alignItems = "center";
+  }
+
+  /* ==================================================
+     6. PARTICLES / BACKGROUND CONTROL
+     ================================================== */
+
+  const particles =
+    document.getElementById("particles-js") ||
+    document.getElementById("particle-canvas");
+
+  const isLowEnd =
+    window.innerWidth < 768 ||
+    navigator.hardwareConcurrency <= 4 ||
+    (navigator.deviceMemory && navigator.deviceMemory <= 4);
+
+  if (particles) {
+    if (isLowEnd) {
+      particles.remove();
+    } else {
+      particles.style.position = "fixed";
+      particles.style.inset = "0";
+      particles.style.zIndex = "-1";
+      particles.style.pointerEvents = "none";
+    }
+  }
+
+  /* ==================================================
+     7. INDEX ONLY — AD CARDS
+     ================================================== */
+
+  const isIndex =
+    location.pathname === "/" ||
+    location.pathname.endsWith("index.html");
+
+  if (isIndex) {
+    document.querySelectorAll(".ad-card").forEach(card => {
+      card.classList.add("ad-responsive");
+    });
+  }})();
