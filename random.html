@@ -209,24 +209,7 @@ color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
   box-shadow:
     0 8px 30px rgba(99,102,241,.45),
     inset 0 1px 0 rgba(255,255,255,.25);
-}
-.nav-double {
-  gap: 9px;
-}
 
-.nav-row {
-  display: flex;
-  gap: 9px;
-}
-
-
-/* pills остаются такими же */
-.nav-pills a {
-  padding: 10px 16px;
-  border-radius: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-}
   </style>
 </head>
 
@@ -241,7 +224,7 @@ color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
        HEADER (ОДИН В ОДИН КАК countdown)
        =========================== -->
 
- 
+
   <!-- HEADER -->
   <header class="header" role="banner" aria-label="Главная шапка">
     <div class="header-inner container">
@@ -252,19 +235,16 @@ color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
           <div class="site-sub">Часы · Никнеймы · Пароли · Рандомайзер · Колесо · Даты</div>          
         </div>
       </div>
-<nav class="nav-pills nav-double" aria-label="Навигация">
-  <div class="nav-row">
-    <a href="index.html">Главная</a>
-    <a href="timer.html">Часы</a>
-    <a href="nick.html">Никнеймы</a>
-    <a href="password.html">Пароли</a>
-    <a href="random.html" class="active">Рандомайзер</a>
-  </div>
-  <div class="nav-row nav-row-sub">
-    <a href="wheel.html">Колесо фортуны</a>
-    <a href="countdown.html">Отсчёт до даты</a>
-  </div>
-</nav>
+
+      <nav class="nav-pills" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="timer.html" class="active">Часы</a>
+        <a href="nick.html">Никнеймы</a>
+        <a href="password.html">Пароли</a>
+        <a href="random.html">Рандомайзер</a>
+        <a href="wheel.html">Колесо фортуны</a>
+        <a href="countdown.html">Отсчёт до даты</a>
+      </nav>
 
       <div class="header-actions" role="toolbar" aria-label="Действия">
         <button id="themeBtn" class="icon-btn" aria-pressed="false" title="Сменить тему">🌙</button>
@@ -272,7 +252,6 @@ color: color-mix(in oklab, var(--text-main) 88%, #7c5cff);
       </div>
     </div>
   </header>
-
 
 
   <!-- ===========================
