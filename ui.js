@@ -38,3 +38,269 @@ document.addEventListener('DOMContentLoaded', setupFavicon);
 if (document.readyState === 'complete') {
   setupFavicon();
 }
+
+(function () {
+  const d = document;
+  const w = window;
+  const root = d.documentElement;
+  const body = d.body;
+
+  // 1. Создание глобальной обёртки для flex-layout
+  function ensureLayout() {
+    if (d.querySelector('.ut-layout')) return;
+
+    const wrap = d.createElement('div');
+    wrap.className = 'ut-layout';
+    wrap.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    `;
+
+    while (body.firstChild) wrap.appendChild(body.firstChild);
+    body.appendChild(wrap);
+
+    const footer = wrap.querySelector('footer');
+    if (footer) footer.style.marginTop = 'auto';
+  }
+  ensureLayout();
+
+  // 2. Адаптация футера (всегда внизу, независимо от масштаба)
+  function stickyFooter() {
+    const layout = d.querySelector('.ut-layout');
+    const footer = d.querySelector('.ut-footer');
+
+    function adjustFooter() {
+      const docHeight = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        root.clientHeight,
+        root.scrollHeight
+      );
+      const contentHeight = layout.offsetHeight - footer.offsetHeight;
+
+      if (contentHeight < docHeight) {
+        footer.style.marginTop = `${docHeight - contentHeight}px`;
+      } else {
+        footer.style.marginTop = 'auto';
+      }
+    }
+
+    adjustFooter();
+    w.addEventListener('resize', adjustFooter);
+    w.addEventListener('scroll', adjustFooter);
+  }
+  stickyFooter();
+
+  // 3. Адаптация хедера и основного контента (отступы, размеры)
+  function adaptHeaderAndMain() {
+    const header = d.querySelector('.header');
+    const main = d.querySelector('main');
+
+    if (!header || !main) return;
+
+    function adjustSpacing() {
+      main.style.marginTop = `${header.offsetHeight}px`;
+      main.style.marginBottom = '64px'; // отступ под футер
+    }
+
+    adjustSpacing();
+    w.addEventListener('resize', adjustSpacing);
+  }
+  adaptHeaderAndMain();
+
+  // 4. Масштабирование элементов (пропорциональность)
+  function responsiveScale() {
+    const mediaQueries = [
+      '(max-width: 1200px)',
+      '(max-width: 992px)',
+      '(max-width: 768px)',
+      '(max-width: 576px)'
+    ];
+
+    mediaQueries.forEach(mq => {
+      const media = w.matchMedia(mq);
+      media.addListener(handleMediaChange);
+      handleMediaChange(media);
+    });
+
+    function handleMediaChange(media) {
+      if (media.matches) {
+        root.classList.add(media.media.replace(/\(|\)/g, ''));
+      } else {
+        root.classList.remove(media.media.replace(/\(|\)/g, ''));
+      }
+    }
+  }
+  responsiveScale();
+
+  // 5. Обработка частиц (работают при любом масштабе, включая 25%)
+  const canvas = d.getElementById('particle-canvas');
+  const ctx = canvas?.getContext('2d');
+
+  function dynamicParticles() {
+    if (!canvas || !ctx) return;
+
+    let particles = [];
+    let zoomLevel = 1;
+
+    function resizeCanvas() {
+      zoomLevel = Math.max(0.25, w.devicePixelRatio * (w.innerWidth / 1440)); // минимум 25%
+      const height = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        root.clientHeight,
+        root.scrollHeight
+      );
+
+      canvas.width = w.innerWidth * zoomLevel;
+      canvas.height = height * zoomLevel;
+      canvas.style.width = w.innerWidth + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
+
+      // Пересоздание частиц с сохранением плотности
+      particles = Array.from({ length: 88 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 0.6 + Math.random() * 4.4,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        hue: 170 + Math.random() * 150,
+        a: 0.03 + Math.random() * 0.08
+      }));
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < -40) p.x = canvas.width + 40;
+        if (p.x > canvas.width + 40) p.x = -40;
+        if (p.y < -40) p.y = canvas.height + 40;
+        if (p.y > canvas.height + 40) p.y = -40;
+
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8);
+        g.addColorStop(0, `hsla(${p.hue},85%,64%,${p.a})`);
+        g.addColorStop(0.6, `hsla(${p.hue},70%,50%,${p.a * 0.4})`);
+        g.addColorStop(1, `hsla(${p.hue},60%,40%,0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 8, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(drawParticles);
+    }
+
+    resizeCanvas();
+    drawParticles();
+    w.addEventListener('resize', resizeCanvas);
+    w.addEventListener('zoom', resizeCanvas);
+  }
+  dynamicParticles();
+
+  // 6. Адаптивные стили (добавляем в <head>)
+  if (!d.getElementById('ut-responsive-style')) {
+    const style = d.createElement('style');
+    style.id = 'ut-responsive-style';
+       @media (max-width: 768px) {
+        .header, .ut-footer {
+          padding: 0.5rem;
+        }
+        main {
+          padding: 0.5rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .header nav, .ut-footer {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .header nav a, .ut-footer a {
+          display: block;
+          margin: 0.5rem 0;
+          padding: 0.3rem 0.5rem;
+          text-align: center;
+          border-radius: 4px;
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header .header-actions {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+
+        .hero-left {
+          padding: 1rem;
+          text-align: center;
+        }
+
+        .grid {
+          gap: 0.5rem;
+        }
+
+        @media (max-width: 320px) {
+          #random-number {
+            font-size: 1.5rem;
+          }
+
+          .hero-left h1 {
+            font-size: 1.5rem;
+          }
+        }
+    `;
+    d.head.appendChild(style);
+  }
+
+  // 7. Адаптация интерактивных элементов (кнопки, поля ввода)
+  function adaptInteractiveElements() {
+    const inputs = d.querySelectorAll('input, button, a');
+    inputs.forEach(el => {
+      el.style.padding = '0.5rem 1rem';
+      el.style.borderRadius = '4px';
+      el.style.display = 'inline-block';
+      el.style.margin = '0.2rem';
+    });
+  }
+  adaptInteractiveElements();
+
+  // 8. Обработка ориентации экрана (портрет/ландшафт)
+  function handleOrientation() {
+    w.addEventListener('orientationchange', () => {
+      stickyFooter();
+      adaptHeaderAndMain();
+      dynamicParticles();
+    });
+  }
+  handleOrientation();
+
+  // 9. Инициализация при загрузке и изменении размера окна
+  function init() {
+    stickyFooter();
+    adaptHeaderAndMain();
+    responsiveScale();
+    dynamicParticles();
+    adaptInteractiveElements();
+  }
+
+  w.addEventListener('load', init);
+  w.addEventListener('resize', init);
+
+  // 10. Дополнительная оптимизация для мобильных устройств
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    d.documentElement.setAttribute('data-mobile', 'true');
+    // Увеличиваем тап-область для кнопок на мобильных
+    const mobileButtons = d.querySelectorAll('button, a');
+    mobileButtons.forEach(btn => {
+      btn.style.touchAction = 'manipulation';
+      btn.style.minWidth = '60px';
+      btn.style.minHeight = '30px';
+    });
+  }
+})();
