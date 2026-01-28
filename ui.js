@@ -451,3 +451,84 @@ if (document.readyState === 'complete') {
   inner.appendChild(wrap);
 
 })();
+/* ==================================================
+   10. TIMER PAGE — MOBILE COLUMN LAYOUT
+   ================================================== */
+(function () {
+
+  const isTimerPage =
+    location.pathname.includes('timer');
+
+  if (!isTimerPage) return;
+
+  const style = document.createElement('style');
+  style.innerHTML = `
+  /* ===============================
+     TIMER — MOBILE REWORK
+     =============================== */
+
+  @media (max-width: 768px) {
+
+    .clock-hub {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 18px !important;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 4px;
+    }
+
+    .clock-card {
+      width: 100%;
+      padding: 22px;
+      border-radius: 20px;
+      transform: none !important;
+    }
+
+    /* убираем desktop hover-агрессию */
+    .clock-card:hover {
+      transform: none !important;
+      box-shadow:
+        0 18px 50px rgba(2,6,23,.45),
+        inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .clock-card::before {
+      opacity: .6;
+    }
+
+    /* контент */
+    .clock-icon {
+      width: 58px;
+      height: 58px;
+      font-size: 34px;
+      border-radius: 16px;
+    }
+
+    .clock-title {
+      font-size: 20px;
+    }
+
+    .clock-desc {
+      font-size: 13.5px;
+      line-height: 1.45;
+    }
+
+    .clock-live {
+      font-size: 26px;
+      margin-top: 4px;
+    }
+
+    /* hero spacing */
+    .hero-left h1 {
+      font-size: 34px !important;
+    }
+
+    .hero-left p {
+      font-size: 14px;
+    }
+  }
+  `;
+  document.head.appendChild(style);
+
+})();
