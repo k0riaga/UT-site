@@ -304,3 +304,150 @@ if (document.readyState === 'complete') {
     });
   }
 })();
+/* ==================================================
+   9. MOBILE HEADER NAV — PREMIUM SELECT (GLOBAL)
+   ================================================== */
+(function () {
+
+  const header = document.querySelector('.header');
+  const nav = header?.querySelector('.nav-pills');
+  if (!header || !nav) return;
+
+  // если уже создано — выходим
+  if (header.querySelector('.mobile-nav-select')) return;
+
+  /* ===== CSS ===== */
+  const style = document.createElement('style');
+  style.innerHTML = `
+  @media (max-width: 768px) {
+
+    .nav-pills {
+      display: none !important;
+    }
+
+    .mobile-nav-select {
+      position: relative;
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .mobile-nav-btn {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      font-weight: 800;
+      font-size: 15px;
+      text-align: left;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(18px);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: .35s;
+    }
+
+    .mobile-nav-btn:hover {
+      background: rgba(255,255,255,.12);
+    }
+
+    .mobile-nav-list {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 0;
+      right: 0;
+      background: rgba(15,15,25,.95);
+      backdrop-filter: blur(20px);
+      border-radius: 18px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 24px 60px rgba(0,0,0,.6);
+      opacity: 0;
+      transform: translateY(-10px) scale(.96);
+      pointer-events: none;
+      transition:
+        opacity .35s ease,
+        transform .4s cubic-bezier(.2,.8,.2,1);
+      z-index: 50;
+    }
+
+    .mobile-nav-list.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .mobile-nav-list a {
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      color: white;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.1);
+      transition: .25s;
+    }
+
+    .mobile-nav-list a:hover {
+      background: linear-gradient(135deg,#8b5cf6,#06b6d4);
+      border-color: transparent;
+      transform: translateX(4px);
+      box-shadow: 0 8px 22px rgba(99,102,241,.4);
+    }
+  }
+  `;
+  document.head.appendChild(style);
+
+  /* ===== BUILD SELECT ===== */
+  const links = [...nav.querySelectorAll('a')];
+
+  const wrap = document.createElement('div');
+  wrap.className = 'mobile-nav-select';
+
+  const activeLink = links.find(a => a.classList.contains('active'));
+  const activeText = activeLink ? activeLink.textContent : 'Навигация';
+
+  const btn = document.createElement('button');
+  btn.className = 'mobile-nav-btn';
+  btn.innerHTML = `
+    <span>${activeText}</span>
+    <span style="opacity:.6">▼</span>
+  `;
+
+  const list = document.createElement('div');
+  list.className = 'mobile-nav-list';
+
+  links.forEach(link => {
+    const a = document.createElement('a');
+    a.href = link.href;
+    a.textContent = link.textContent;
+
+    if (link.classList.contains('active')) {
+      a.style.background = 'linear-gradient(135deg,#8b5cf6,#06b6d4)';
+      a.style.borderColor = 'transparent';
+    }
+
+    list.appendChild(a);
+  });
+
+  /* ===== INTERACTION ===== */
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    list.classList.toggle('active');
+  });
+
+  document.addEventListener('click', () => {
+    list.classList.remove('active');
+  });
+
+  wrap.appendChild(btn);
+  wrap.appendChild(list);
+
+  /* ===== INSERT ===== */
+  const inner = header.querySelector('.header-inner');
+  inner.appendChild(wrap);
+
+})();
